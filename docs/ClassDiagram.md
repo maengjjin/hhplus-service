@@ -68,6 +68,12 @@ classDiagram
         +decreaseQty(long coupon): long
     }
 
+    class UserCoupon {
+        -couponId: long
+        -couponYn: String
+        -updateAt: Date    
+    }     
+
     class CouponType {
         <<enumeration>>
         FIXED
@@ -117,5 +123,6 @@ classDiagram
     Order "1" --> "*" OrderItem
     Order "1" --> "1" Payment
     User "1" --> "*" Payment
-
+    User "1" --> "*" UserCoupon
+    Coupon "1" --> "1" UserCoupon
 ```
