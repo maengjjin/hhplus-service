@@ -27,9 +27,11 @@ public class ProductController {
     public ApiResponse<List<ProductResponse>> getProductRanking() {
         return ApiResponse.success(
             List.of(
-                new ProductResponse(1L, "흰색", 30000L, "상품 판매", null),
-                new ProductResponse(2L, "검정색", 35000L, "상품 판매", null),
-                new ProductResponse(3L, "회색", 28000L, "상품 판매", null)
+                new ProductResponse(1L, "후드티", 30000L, "상품 판매", null),
+                new ProductResponse(2L, "맨투맨", 35000L, "상품 판매", null),
+                new ProductResponse(3L, "블라우스", 28000L, "상품 판매", null),
+                new ProductResponse(4L, "신발", 32000L, "상품 판매", null),
+                new ProductResponse(5L, "슬리퍼", 27000L, "상품 판매", null)
             )
         );
     }
