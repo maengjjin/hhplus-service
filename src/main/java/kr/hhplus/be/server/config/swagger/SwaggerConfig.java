@@ -21,11 +21,11 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 public class SwaggerConfig {
     @Bean
     public GroupedOpenApi chatOpenApi() {
-        String[] paths = {"/v1/**"};
+
 
         return GroupedOpenApi.builder()
-            .group("채팅서비스 API v1")
-            .pathsToMatch(paths)
+            .group("e커머스 API v1")
+            .pathsToMatch("/**")
             .build();
     }
 }
