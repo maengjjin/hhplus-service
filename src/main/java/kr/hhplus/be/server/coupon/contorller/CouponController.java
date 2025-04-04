@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/coupon")
 public class CouponController {
 
-    @PostMapping("send/{couponId}")
+    @PostMapping("/send/{couponId}")
     public ApiResponse<CouponResponse> sendCoupon(@PathVariable long couponId) {
         return ApiResponse.success(CouponResponse.of(
             1, "5,000원 할인쿠폰", 5000L, "20250501")

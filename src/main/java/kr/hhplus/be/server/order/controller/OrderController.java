@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/order")
 public class OrderController {
 
-    @PostMapping("payment")
+    @PostMapping("/payment")
     public ApiResponse<OrderResponse> orderProduct(@RequestBody OrderRequest orderRequest){
 
         return ApiResponse.success(OrderResponse.of(1L, 58000, "20250404143000"));
