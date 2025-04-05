@@ -36,7 +36,7 @@ public class ProductController {
         ));
     }
 
-    @Operation(summary = "상품 단건 조회 API", description = "상품 단건 조회",
+    @Operation(summary = "상위 상품 조회 API", description = "상위 상품 조회",
         responses = @ApiResponse(responseCode = "200", description = "성공", content = @Content(schema = @Schema(implementation = SwaggerProductResponse.class))))
     @GetMapping("/ranking")
     public ApiResult<List<ProductResponse>> getProductRanking() {
