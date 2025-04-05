@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.common.ApiResult;
 import kr.hhplus.be.server.order.request.OrderRequest;
 import kr.hhplus.be.server.order.request.SwaggerOrderRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/order")
+@Tag(name = "주문/결제 API")
 public class OrderController {
 
     @Operation(summary = "결제 API", description = "주문 결제",

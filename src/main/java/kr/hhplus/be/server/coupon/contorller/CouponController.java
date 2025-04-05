@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.common.ApiResult;
 import kr.hhplus.be.server.coupon.response.CouponResponse;
 import kr.hhplus.be.server.coupon.response.SwaggerCouponResponse;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/coupon")
+@Tag(name = "쿠폰 API")
 public class CouponController {
 
     @Operation(summary = "쿠폰 발급 API", description = "쿠폰을 사용자에게 발급합니다",

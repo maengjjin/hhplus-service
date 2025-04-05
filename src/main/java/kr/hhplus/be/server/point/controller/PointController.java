@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.common.ApiResult;
 import kr.hhplus.be.server.point.request.PointRequest;
 import kr.hhplus.be.server.point.response.PointResponse;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/point")
+@Tag(name = "충전 API")
 public class PointController {
 
     @Operation(summary = "포인트 충전 API", description = "포인트 충전",

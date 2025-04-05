@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import kr.hhplus.be.server.common.ApiResult;
 import kr.hhplus.be.server.product.response.ProductOptionResponse;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/product")
+@Tag(name = "상품 API")
 public class ProductController {
 
     @Operation(summary = "상품 단건 조회 API", description = "상품 단건 조회",
