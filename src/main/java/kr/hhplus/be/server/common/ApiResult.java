@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 public class ApiResult<T> {
 
     private final int code;
+
     private final String message;
+
     private final T data;
 
 

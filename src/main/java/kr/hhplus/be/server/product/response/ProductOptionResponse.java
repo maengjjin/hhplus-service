@@ -8,8 +8,11 @@ import lombok.Getter;
 public class ProductOptionResponse {
 
     private long optionId;
+
     private String name;
+
     private long price;
+
     private long stockQty;
 
     public static ProductOptionResponse of(long optionId, String name, long price, long stockQty) {

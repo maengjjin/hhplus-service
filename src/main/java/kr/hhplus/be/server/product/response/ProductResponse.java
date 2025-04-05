@@ -10,8 +10,11 @@ import lombok.Getter;
 public class ProductResponse {
 
     private long productId;
+
     private String name;
+
     private long price;
+
     private String status;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -8,8 +8,11 @@ import lombok.Getter;
 public class OrderProductRequest {
 
     private long productId;
+
     private long optionId;
+
     private long productPrice;
+
     private long orderQty;
 
     public static OrderProductRequest of(long productId, long optionId,long productPrice, long orderQty) {

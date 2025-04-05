@@ -136,7 +136,7 @@
 
 ###### 6️⃣ 결제 API
 ##### POST `/order/payment`
-사용자의 쿠폰 리스트를 조회합니다.
+사용자가 상품 결제를 합니다
 
 ###### 🔸 Request Body
 ```json

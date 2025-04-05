@@ -8,7 +8,9 @@ import lombok.Getter;
 public class OrderResponse {
 
     private long userId;
+
     private long totalAmount;
+
     private String orderAt;
 
     public static OrderResponse of(long userId, long totalAmount,String orderAt) {
