@@ -10,12 +10,13 @@ classDiagram
         -historyId: long
         -userId: long
         -amount: long
+        -afterPoint: long
+        -beforePoint: long
         -createAt: Date
         -pointType : TransactionType
     }
 
     class Point {
-        -pointId: long
         -point: long
 
         +MAX_AMOUNT : long
@@ -114,9 +115,8 @@ classDiagram
         +calculateCouponDiscount()
     }
 
-    User "1" --> "1" Point
-    Point "1" --> "*" PointHistory
-    User "1" --> "N" PointHistory
+
+    User "1" --> "*" PointHistory
     Product "1" --> "*" ProductOption
     User "1" --> "*" Coupon
     User "1" --> "*" Order
