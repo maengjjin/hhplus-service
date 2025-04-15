@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.domain;
 
 import static kr.hhplus.be.server.domain.product.ProductStatus.*;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -11,12 +10,13 @@ import java.util.List;
 import kr.hhplus.be.server.Exception.ProductException.OutOfStockException;
 import kr.hhplus.be.server.Exception.ProductException.ProductInactiveException;
 import kr.hhplus.be.server.Exception.ProductException.ProductNotFoundException;
-import kr.hhplus.be.server.domain.order.OrderItem;
 import kr.hhplus.be.server.domain.product.Product;
+import kr.hhplus.be.server.domain.product.ProductCommand;
 import kr.hhplus.be.server.domain.product.ProductInfo;
 import kr.hhplus.be.server.domain.product.ProductOption;
 import kr.hhplus.be.server.domain.product.ProductRepository;
 import kr.hhplus.be.server.domain.product.ProductService;
+import kr.hhplus.be.server.domain.product.ProductValidation;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,12 +35,15 @@ public class ProductServiceTest {
     @Mock
     ProductRepository productRepository;
 
-
     Product product;
 
     List<ProductOption> options;
 
     ProductInfo productInfo;
+
+    ProductCommand.Product command;
+
+    ProductValidation productValidation;
 
 
 
@@ -58,6 +61,11 @@ public class ProductServiceTest {
             .product(product)
             .options(options)
             .build();
+
+
+        command = new ProductCommand.Product(100L, 101L, 3L);
+
+        productValidation = new ProductValidation(100L, 101L, 50L, ACTIVE, 1000L);
     }
 
 
@@ -69,8 +77,7 @@ public class ProductServiceTest {
         // given 존재하는 상품 ID와 상품 옵션 설정
         long productId = 100L;
 
-        Mockito.when(productRepository.findProductById(productId)).thenReturn(product);
-        Mockito.when(productRepository.findProductOptionById(productId)).thenReturn(options);
+        Mockito.when(productRepository.findProductWithOptions(productId)).thenReturn(productInfo);
 
 
         // when 상품 조회
@@ -78,9 +85,7 @@ public class ProductServiceTest {
 
         // then 상품 검증
         Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(productInfo);
-        verify(productRepository, times(1)).findProductById(productId);
-        verify(productRepository, times(1)).findProductOptionById(productId);
-
+        verify(productRepository, times(1)).findProductWithOptions(productId);
 
     }
 
@@ -90,7 +95,7 @@ public class ProductServiceTest {
         // given 존재하지 않는 상품 ID에 대해 productRepository가 null을 반환하도록 설정
         long productId = 200L;
 
-        Mockito.when(productRepository.findProductById(productId)).thenReturn(null);
+        Mockito.when(productRepository.findProductWithOptions(productId)).thenReturn(null);
 
         // when then 예외 발생
         assertThrows(ProductNotFoundException.class, () ->
@@ -105,7 +110,20 @@ public class ProductServiceTest {
         // given 상태가 중단된 상품을 반환하도록 설정
         product = Product.of(100L, "신발", 30_000L, INACTIVE);
 
-        Mockito.when(productRepository.findProductById(100L)).thenReturn(product);
+        options = List.of(
+            ProductOption.of(100L, 3000L, "250", 30_000L, 5L),
+            ProductOption.of(100L, 3001L, "240", 30_000L, 7L),
+            ProductOption.of(100L, 3002L, "230", 30_000L, 3L)
+        );
+
+        productInfo = ProductInfo.builder()
+            .product(product)
+            .options(options)
+            .build();
+
+        Mockito.when(productRepository.findProductWithOptions(100L)).thenReturn(productInfo);
+
+
 
         // when: 예외 발생
         assertThrows(ProductInactiveException.class, () ->
@@ -113,26 +131,23 @@ public class ProductServiceTest {
 
     }
 
+
     @Test
     void 상품_재고_충분할때_조회_성공(){
 
         // given 주문한 수량보다 재고가 충분한 상품옵션들이 존재함을 mock으로 설정
-        List<OrderItem> orderItems = List.of(
-            new OrderItem(100L, 101L, 2),
-            new OrderItem(100L, 102L, 2)
-        );
 
-        when(productRepository.fetchOptionsByProductId(100L, 101L)).thenReturn(3L);
-        when(productRepository.fetchOptionsByProductId(100L, 102L)).thenReturn(3L);
+
+        productValidation = new ProductValidation(100L, 101L, 50L, ACTIVE, 1000L);
+        when(productRepository.fetchOptionByProductId(command)).thenReturn(productValidation);
+
 
         // when 상품 재고 조회
-        productService.checkStockAvailability(orderItems);
+        productService.checkProductAvailability(command);
 
-        // then 예외가 발생하지 않고, 메서드가 옵션 수만큼 호출되었는지 검증
-        verify(productRepository, times(orderItems.size())).fetchOptionsByProductId(Mockito.anyLong(), Mockito.anyLong());
-        assertDoesNotThrow(() ->
-            productService.checkStockAvailability(orderItems)
-            );
+
+        // then 예외가 발생하지 않고, 호출 됐는지
+        verify(productRepository, times(1)).fetchOptionByProductId(command);
 
     }
 
@@ -140,19 +155,42 @@ public class ProductServiceTest {
     void 상품_재고가_요청수량보다_적을때_예외발생(){
 
         // given 한 상품옵션의 재고가 부족하도록 설정 (요청 수량 > 재고)
-        List<OrderItem> orderItems = List.of(
-            new OrderItem(100L, 101L, 5)
-        );
 
-        // when 재고 확인 요청
-        when(productRepository.fetchOptionsByProductId(100L, 101L)).thenReturn(3L);
+        productValidation = new ProductValidation(100L, 101L, 2L, ACTIVE, 1000L);
 
-        // then 예외 검증
-        assertThrows(OutOfStockException.class, () ->
-            productService.checkStockAvailability(orderItems)
-        );
+        when(productRepository.fetchOptionByProductId(command)).thenReturn(productValidation);
+
+
+        // when then 재고 예외 검증
+        assertThrows(OutOfStockException.class, () -> {
+            productService.checkProductAvailability(command);
+        });
+
+        verify(productRepository, times(1)).fetchOptionByProductId(command);
 
     }
+
+    @Test
+    void 상품_상태가_비활성일때_예외처리(){
+
+        // given 한 상품옵션의 재고가 부족하도록 설정 (요청 수량 > 재고)
+
+        productValidation = new ProductValidation(100L, 101L, 10L, INACTIVE, 1000L);
+
+        when(productRepository.fetchOptionByProductId(command)).thenReturn(productValidation);
+
+
+        // when then 재고 예외 검증
+        assertThrows(ProductInactiveException.class, () -> {
+            productService.checkProductAvailability(command);
+        });
+
+        verify(productRepository, times(1)).fetchOptionByProductId(command);
+
+    }
+
+
+
 
 
 

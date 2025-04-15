@@ -1,5 +1,8 @@
 package kr.hhplus.be.server.domain.product;
 
+import static kr.hhplus.be.server.domain.product.ProductStatus.INACTIVE;
+import static kr.hhplus.be.server.domain.product.ProductStatus.SOLD_OUT;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -8,6 +11,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import java.time.LocalDateTime;
+import kr.hhplus.be.server.Exception.ProductException.ProductInactiveException;
+import kr.hhplus.be.server.Exception.ProductException.ProductNotFoundException;
+import kr.hhplus.be.server.Exception.ProductException.SoldoutStockException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,6 +59,19 @@ public class Product {
             .price(price)
             .status(status)
             .build();
+    }
+
+
+    public static void productValidation(ProductStatus status){
+
+        if (status == INACTIVE) {
+            throw new ProductInactiveException();
+        }
+
+        if (status == SOLD_OUT) {
+            throw new SoldoutStockException();
+        }
+
     }
 
 
