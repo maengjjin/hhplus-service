@@ -11,13 +11,6 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User getUserInfo(long userId){
-
-        User user = userRepository.getUserInfo(userId);
-
-        if(user == null){
-            throw new UserNotFoundException();
-        }
-
-        return user;
+        return userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
     }
 }
