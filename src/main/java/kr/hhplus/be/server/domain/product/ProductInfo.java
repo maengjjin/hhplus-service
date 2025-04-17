@@ -7,15 +7,15 @@ import lombok.Getter;
 @Getter
 public class ProductInfo {
 
-    private long productId;
+    private final long productId;
 
-    private String name;
+    private final String name;
 
-    private long price;
+    private final long price;
 
-    private ProductStatus status;
+    private final ProductStatus status;
 
-    private List<ProductOption> options;
+    private final List<ProductOption> options;
 
 
     @Builder

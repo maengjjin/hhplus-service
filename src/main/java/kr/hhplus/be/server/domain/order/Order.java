@@ -23,7 +23,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long orderId;
 
-    private long orderNo;
+    private String orderNo;
 
     private long userId;
 
@@ -34,6 +34,12 @@ public class Order {
     private LocalDateTime updateAt;
 
 
+    public Order(long orderId, String orderNo, long userId, OrderStatus type) {
+        this.orderId = orderId;
+        this.orderNo = orderNo;
+        this.userId = userId;
+        this.type = type;
+    }
 
     public static String createOrderNumber() {
 

@@ -26,9 +26,9 @@ public class ProductService {
     }
 
 
-    public ProductValidation checkProductAvailability(ProductCommand.Product orderItem) {
+    public ProductValidation checkProductAvailability(ProductCommand product) {
 
-        ProductValidation validation = productRepository.fetchOptionByProductId(orderItem);
+        ProductValidation validation = productRepository.fetchOptionByProductId(product);
 
         if(validation == null){
             throw new ProductNotFoundException();
@@ -36,13 +36,17 @@ public class ProductService {
 
         productValidation(validation.getStatus());
 
-        validation.stockValidation(orderItem.getQty());
+        validation.stockValidation(product.getQty());
 
         return validation;
 
     }
 
 
+    public void decreaseStock(ProductValidation stockOrder) {
 
+        ProductValidation decreaseStock = stockOrder.decreaseStock();
 
+        productRepository.updateStockQuantity(decreaseStock);
+    }
 }

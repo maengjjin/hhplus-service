@@ -33,10 +33,12 @@ public class OrderDetail {
 
     private LocalDateTime createAt;
 
-
-
-
-
-
-
+    public OrderDetail(long detailId, long orderId, long productId, long optionId, long optionPrice, long orderQty) {
+        this.detailId = detailId;
+        this.orderId = orderId;
+        this.productId = productId;
+        this.optionId = optionId;
+        this.optionPrice = optionPrice;
+        this.orderQty = orderQty;
+    }
 }

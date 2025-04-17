@@ -38,6 +38,4 @@ public class User {
         return new User(userId, point);
     }
 
-
-
 }

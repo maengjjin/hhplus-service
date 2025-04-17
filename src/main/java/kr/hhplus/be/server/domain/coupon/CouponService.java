@@ -18,6 +18,13 @@ public class CouponService {
             throw new CouponNotFoundException();
        }
 
+       // 사용여부
+        userCoupon.validateUsable();
+
+        // 유효기간 확인
+        userCoupon.validateNotExpired();
+
        return userCoupon;
     }
+
 }

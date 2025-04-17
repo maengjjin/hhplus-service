@@ -1,7 +1,9 @@
 package kr.hhplus.be.server.domain;
 
 import static kr.hhplus.be.server.domain.product.ProductStatus.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -21,6 +23,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -41,7 +44,7 @@ public class ProductServiceTest {
 
     ProductInfo productInfo;
 
-    ProductCommand.Product command;
+    ProductCommand command;
 
     ProductValidation productValidation;
 
@@ -63,9 +66,9 @@ public class ProductServiceTest {
             .build();
 
 
-        command = new ProductCommand.Product(100L, 101L, 3L);
+        command = new ProductCommand(100L, 101L, 3L);
 
-        productValidation = new ProductValidation(100L, 101L, 50L, ACTIVE, 1000L);
+        productValidation = new ProductValidation(100L, 101L, 50L, 2L,ACTIVE, 1000L);
     }
 
 
@@ -138,7 +141,7 @@ public class ProductServiceTest {
         // given 주문한 수량보다 재고가 충분한 상품옵션들이 존재함을 mock으로 설정
 
 
-        productValidation = new ProductValidation(100L, 101L, 50L, ACTIVE, 1000L);
+        productValidation = new ProductValidation(100L, 101L, 50L, 2L, ACTIVE, 1000L);
         when(productRepository.fetchOptionByProductId(command)).thenReturn(productValidation);
 
 
@@ -156,7 +159,7 @@ public class ProductServiceTest {
 
         // given 한 상품옵션의 재고가 부족하도록 설정 (요청 수량 > 재고)
 
-        productValidation = new ProductValidation(100L, 101L, 2L, ACTIVE, 1000L);
+        productValidation = new ProductValidation(100L, 101L, 1L, 2L, ACTIVE, 1000L);
 
         when(productRepository.fetchOptionByProductId(command)).thenReturn(productValidation);
 
@@ -175,7 +178,7 @@ public class ProductServiceTest {
 
         // given 한 상품옵션의 재고가 부족하도록 설정 (요청 수량 > 재고)
 
-        productValidation = new ProductValidation(100L, 101L, 10L, INACTIVE, 1000L);
+        productValidation = new ProductValidation(100L, 101L, 50L, 2L, INACTIVE, 1000L);
 
         when(productRepository.fetchOptionByProductId(command)).thenReturn(productValidation);
 
@@ -189,6 +192,35 @@ public class ProductServiceTest {
 
     }
 
+
+    @Test
+    void 상품_재고_차감_성공(){
+
+        // given 한 상품옵션의 재고가 부족하도록 설정 (요청 수량 > 재고)
+
+        ProductValidation originalValidation = new ProductValidation(100L, 101L, 50L, 2L, ACTIVE, 1000L);
+        ProductValidation expectedValidation = new ProductValidation(100L, 101L, 48L, 2L, ACTIVE, 1000L);
+
+
+
+        // when then 재고 예외 검증
+        productService.decreaseStock(originalValidation);
+
+        ArgumentCaptor<ProductValidation> captor = ArgumentCaptor.forClass(ProductValidation.class);
+
+        verify(productRepository).updateStockQuantity(captor.capture());
+
+        ProductValidation actual = captor.getValue();
+
+        // 필드별로 확인
+        assertThat(actual.getProductId()).isEqualTo(expectedValidation.getProductId());
+        assertThat(actual.getOptionId()).isEqualTo(expectedValidation.getOptionId());
+        assertThat(actual.getStockQty()).isEqualTo(expectedValidation.getStockQty());
+        assertThat(actual.getOrderQty()).isEqualTo(expectedValidation.getOrderQty());
+        assertThat(actual.getPrice()).isEqualTo(expectedValidation.getPrice());
+        assertThat(actual.getStatus()).isEqualTo(expectedValidation.getStatus());
+
+    }
 
 
 

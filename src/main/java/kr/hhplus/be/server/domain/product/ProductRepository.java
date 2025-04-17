@@ -7,5 +7,7 @@ public interface ProductRepository {
 
     ProductInfo findProductWithOptions(long productId);
 
-    ProductValidation fetchOptionByProductId(ProductCommand.Product orderItem);
+    ProductValidation fetchOptionByProductId(ProductCommand orderItem);
+
+    void updateStockQuantity(ProductValidation stockOrder);
 }

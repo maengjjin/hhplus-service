@@ -38,6 +38,7 @@ public class CouponServiceTest {
         userCouponInfo = new UserCouponInfo(
             1L,
             101L,
+            "N",
             FIXED,
             0,
             5000,

@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.point;
 
+import kr.hhplus.be.server.Exception.PointException.InsufficientPointBalanceException;
 import kr.hhplus.be.server.Exception.PointException.InvalidPointAmountException;
 import lombok.Getter;
 
@@ -33,9 +34,17 @@ public class Point {
     }
 
     // 충전 금액
-    public long add(long amount){
+    public void add(long amount){
         validateChargeAmount(amount);
-       return point += amount;
+        point += amount;
+    }
+
+    public void use(long amount){
+        if(amount > point) {
+            throw new InsufficientPointBalanceException();
+        }
+
+        point -= amount;
     }
 
 }
