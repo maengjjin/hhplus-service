@@ -12,19 +12,28 @@ public class CouponService {
 
     public UserCouponInfo findUserCoupon(long userId, long couponId) {
 
-        UserCouponInfo userCoupon = couponRepository.findUserCouponsWithInfo(userId, couponId);
+        UserCoupon userCoupon = couponRepository.findUserCouponsWithInfo(userId, couponId);
+
+        UserCouponInfo userCouponInfo = new UserCouponInfo(userCoupon.getCoupon(), userCoupon);
 
        if(userCoupon == null){
             throw new CouponNotFoundException();
        }
 
-       // 사용여부
-        userCoupon.validateUsable();
+        userCouponInfo.validateUsable();
 
-        // 유효기간 확인
-        userCoupon.validateNotExpired();
+        userCouponInfo.validateNotExpired();
 
-       return userCoupon;
+       return userCouponInfo;
+    }
+
+
+
+    public void useCoupon(UserCouponInfo userCouponInfo){
+
+        couponRepository.updateCouponUsed(userCouponInfo.getUserId(), userCouponInfo.getCouponId());
+
+
     }
 
 }

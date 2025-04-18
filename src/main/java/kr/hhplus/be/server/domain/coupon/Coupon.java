@@ -26,7 +26,7 @@ public class Coupon {
 
     private int discountRate;
 
-    private int discountAount;
+    private int discountAmount;
 
     private int minPurchaseAmount;
 
