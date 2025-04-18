@@ -5,9 +5,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductRepository {
 
-    ProductInfo findProductWithOptions(long productId);
+    Product findProductWithOptions(long productId);
 
-    ProductValidation fetchOptionByProductId(ProductCommand orderItem);
+    ProductOption findOptionWithProduct(long productId, long optionId);
 
-    void updateStockQuantity(ProductValidation stockOrder);
+    void updateStockQuantity(long productId, long optionId, long stockQty);
 }

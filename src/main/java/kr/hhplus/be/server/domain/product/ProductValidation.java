@@ -29,20 +29,18 @@ public class ProductValidation {
 
 
     public ProductValidation decreaseStock() {
-        return new ProductValidation(
-            productId, optionId, stockQty - orderQty, orderQty, status, price
-        );
+        return new ProductValidation(productId, optionId, stockQty - orderQty, orderQty, status, price);
     }
 
-    public ProductValidation of(ProductValidation base, long orderQty) {
-        return new ProductValidation(
-            base.getProductId(),
-            base.getOptionId(),
-            base.getStockQty(),
-            orderQty,
-            base.getStatus(),
-            base.getPrice()
-        );
+
+    public ProductValidation (ProductOption option, long orderQty) {
+        this.productId = option.getProduct().getProductId();
+        this.optionId = option.getOptionId();
+        this.stockQty = option.getStockQty();
+        this.orderQty = orderQty;
+        this.status = option.getProduct().getStatus();
+        this.price = option.getPrice();
     }
+
 
 }
