@@ -32,18 +32,16 @@ public class UserCouponInfo {
     private final LocalDateTime expiresAt;
 
 
-    public UserCouponInfo(long userId, long couponId, String couponYn, CouponType type,
-        int discountRate, int discountAmount, int minPurchaseAmount, int maxDiscountAmount,
-        LocalDateTime expiresAt) {
-        this.userId = userId;
-        this.couponId = couponId;
-        this.couponYn = couponYn;
-        this.type = type;
-        this.discountRate = discountRate;
-        this.discountAmount = discountAmount;
-        this.minPurchaseAmount = minPurchaseAmount;
-        this.maxDiscountAmount = maxDiscountAmount;
-        this.expiresAt = expiresAt;
+    public UserCouponInfo(Coupon coupon, UserCoupon userCoupon){
+        this.userId = userCoupon.getUser().getUserId();
+        this.couponId = coupon.getCouponId();
+        this.couponYn = userCoupon.getCouponYn();
+        this.type = coupon.getType();
+        this.discountRate = coupon.getDiscountRate();
+        this.discountAmount = coupon.getDiscountAmount();
+        this.minPurchaseAmount = coupon.getMinPurchaseAmount();
+        this.maxDiscountAmount = coupon.getMaxDiscountAmount();
+        this.expiresAt = coupon.getExpiresAt();
     }
 
     void validateUsable(){
@@ -57,4 +55,6 @@ public class UserCouponInfo {
             throw new CouponExpiredException();
         }
     }
+
+
 }
