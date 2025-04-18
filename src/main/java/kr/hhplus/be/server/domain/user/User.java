@@ -34,6 +34,10 @@ public class User {
         this.point = point;
     }
 
+    public User(long userId){
+        this.userId = userId;
+    }
+
     public static User of(long userId, long point) {
         return new User(userId, point);
     }
