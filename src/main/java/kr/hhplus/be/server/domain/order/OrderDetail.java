@@ -33,8 +33,19 @@ public class OrderDetail {
 
     private LocalDateTime createAt;
 
-    public OrderDetail(long detailId, long orderId, long productId, long optionId, long optionPrice, long orderQty) {
-        this.detailId = detailId;
+
+    public static OrderDetail of(OrderCommand.OrderItemDetail detail, long orderId) {
+        return new OrderDetail(
+            orderId,
+            detail.getProductId(),
+            detail.getOptionId(),
+            detail.getPrice(),
+            detail.getQty()
+        );
+    }
+
+    public OrderDetail(long orderId, long productId, long optionId, long optionPrice,
+        long orderQty) {
         this.orderId = orderId;
         this.productId = productId;
         this.optionId = optionId;

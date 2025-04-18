@@ -5,9 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
+import kr.hhplus.be.server.domain.user.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +28,9 @@ public class Order {
 
     private String orderNo;
 
-    private long userId;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
 
     private OrderStatus type;
 
@@ -34,12 +39,17 @@ public class Order {
     private LocalDateTime updateAt;
 
 
-    public Order(long orderId, String orderNo, long userId, OrderStatus type) {
-        this.orderId = orderId;
-        this.orderNo = orderNo;
-        this.userId = userId;
+
+    public Order(User user, OrderStatus type) {
+        this.orderNo = createOrderNumber();
+        this.user = user;
         this.type = type;
     }
+
+    public static Order of(User user, OrderStatus type) {
+        return new Order(user, type);
+    }
+
 
     public static String createOrderNumber() {
 

@@ -6,8 +6,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderRepository {
 
+    Order saveOrder(Order order);
 
-    Order saveOrder(long userId, String orderNo, OrderStatus ordered);
-
-    void saveOrderDetail(long orderId, List<OrderCommand.OrderItemDetail> item);
+    void saveOrderDetail(OrderDetail detail);
 }

@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.application.order;
 
-import static kr.hhplus.be.server.domain.product.ProductCommand.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,6 @@ import kr.hhplus.be.server.domain.payment.PaymentService;
 import kr.hhplus.be.server.domain.point.PointService;
 import kr.hhplus.be.server.domain.product.ProductCommand;
 import kr.hhplus.be.server.domain.product.ProductService;
-import kr.hhplus.be.server.domain.product.ProductStatus;
 import kr.hhplus.be.server.domain.product.ProductValidation;
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserService;
@@ -75,6 +73,12 @@ public class OrderFacade {
 
         // 포인트 차감
         pointService.usePoint(user, payment.getPaidPay());
+
+        // 쿠폰 사용
+        pointService.usePoint(user, payment.getPaidPay());
+
+        // 쿠폰 사용
+        couponService.useCoupon(userCoupon);
 
         // 재고 차감
         for (ProductValidation validation : productValidationList) {
