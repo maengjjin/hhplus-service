@@ -40,7 +40,7 @@ public class UserServiceTest {
     void 유저_조회_성공() {
         //arrange 유저 조회를 하기 위해 user를 준비한다
 
-        Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.findById(userId)).thenReturn(user);
 
         // act userId를 가지고 user의 정보를 조회 한다
         User userInfo = userService.getUserInfo(userId);
