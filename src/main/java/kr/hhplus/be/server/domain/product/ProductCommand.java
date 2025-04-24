@@ -5,27 +5,25 @@ import kr.hhplus.be.server.domain.order.OrderCommand;
 import lombok.Getter;
 
 
+@Getter
 public class ProductCommand {
 
+    long productId;
 
-    @Getter
-    public static class Product {
+    long optionId;
 
-        long productId;
+    long qty;
 
-        long optionId;
-
-        long qty;
-
-        public Product(long productId, long optionId, long qty) {
-            this.productId = productId;
-            this.optionId = optionId;
-            this.qty = qty;
-        }
-
-        public static Product toCommand(OrderCommand.OrderItem item){
-            return new Product(item.getProductId(), item.getOptionId(), item.getQty());
-        }
-
+    public ProductCommand(long productId, long optionId, long qty) {
+        this.productId = productId;
+        this.optionId = optionId;
+        this.qty = qty;
     }
+
+    public static ProductCommand toCommand(OrderCommand item){
+        return new ProductCommand(item.getProductId(), item.getOptionId(), item.getQty());
+    }
+
+
+
 }

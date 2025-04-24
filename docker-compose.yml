@@ -1,16 +1,17 @@
-version: '3'
+version: "3"
 services:
   mysql:
     image: mysql:8.0
+    container_name: my-mysql
     ports:
       - "3306:3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_USER=application
-      - MYSQL_PASSWORD=application
-      - MYSQL_DATABASE=hhplus
+      MYSQL_ROOT_PASSWORD: newpass123
+      MYSQL_DATABASE: hhplus
     volumes:
-      - ./data/mysql/:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
+volumes:
+  mysql-data:
 
 networks:
   default:

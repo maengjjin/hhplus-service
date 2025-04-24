@@ -12,6 +12,13 @@ public class ApiResult<T> {
     private final T data;
 
 
+
+    // 성공 응답 (데이터)
+    public static <T> ApiResult<T> success() {
+        return new ApiResult<>(200, "성공", null);
+    }
+
+
     // 성공 응답 (데이터)
     public static <T> ApiResult<T> success(T data) {
         return new ApiResult<>(200, "성공", data);

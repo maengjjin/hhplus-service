@@ -38,34 +38,26 @@ public class UserServiceTest {
 
     @Test
     void 유저_조회_성공() {
-        //arrange 유저 조회를 하기 위해 user를 준비한다
-
+        // given 유효한 userId에 대한 사용자 정보가 존재함
         Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        // act userId를 가지고 user의 정보를 조회 한다
+        // when userId를 통해 사용자 정보 조회
         User userInfo = userService.getUserInfo(userId);
 
-        // 테스트 결과
-        Assertions.assertThat(user).isEqualTo(userInfo);
-
+        // then 반환된 사용자 정보가 기대한 값과 일치하는지 확인
+        Assertions.assertThat(userInfo).isEqualTo(user);
     }
 
     @Test
     @DisplayName("없는 userId로 조회를 했을 때 실패")
-    void 유저_조회_실패(){
+    void 없는_아이디로_조회_했을_때_실패() {
 
-        //arrange 없는 userId를 조회 할 경우 null을 리턴하게 세팅
-        Mockito.when(userRepository.findById(2L))
-            .thenReturn(null);
-
-
-        // 테스트 결과
+        // when & then 조회 시 예외가 발생해야 함
         assertThrows(UserNotFoundException.class, () -> {
             userService.getUserInfo(2L);
         });
 
     }
-
 
 
 }

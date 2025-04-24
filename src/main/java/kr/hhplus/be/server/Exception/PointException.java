@@ -8,4 +8,10 @@ public class PointException {
         }
     }
 
+    public static class InsufficientPointBalanceException  extends IllegalArgumentException {
+        public InsufficientPointBalanceException () {
+            super("금액이 부족 합니다");
+        }
+    }
+
 }

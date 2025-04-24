@@ -1,15 +1,17 @@
 package kr.hhplus.be.server.domain.coupon;
 
-import kr.hhplus.be.server.domain.point.PointHistory;
-import org.springframework.stereotype.Repository;
+import java.util.Optional;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 public interface CouponRepository {
 
-    void updatePoint(long userId, long amount);
+    UserCoupon findUserCouponsWithInfo(long userId, long couponId);
 
-    void savePointHistory(PointHistory entity);
+    Coupon save(Coupon coupon);
 
+    UserCoupon save(UserCoupon userCoupon);
 
-    UserCouponInfo findUserCouponsWithInfo(long userId, long couponId);
+    Optional<Coupon> findById(long couponId);
+
 }

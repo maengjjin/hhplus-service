@@ -2,6 +2,7 @@ package kr.hhplus.be.server.web.product.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
+import kr.hhplus.be.server.domain.product.ProductInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,11 +11,8 @@ import lombok.Getter;
 public class ProductResponse {
 
     private long productId;
-
     private String name;
-
     private long price;
-
     private String status;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -24,8 +22,19 @@ public class ProductResponse {
         return new ProductResponse(productId, name, price, status, optionList);
     }
 
-    public static ProductResponse of(long productId, String name, long price, String status) {
-        return new ProductResponse(productId, name, price, status, null);
+
+    public static ProductResponse from(ProductInfo info) {
+        List<ProductOptionResponse> optionList = info.getOptions().stream()
+            .map(ProductOptionResponse::from)
+            .toList();
+
+        return ProductResponse.of(
+            info.getProductId(),
+            info.getName(),
+            info.getPrice(),
+            info.getStatus().name(),
+            optionList
+        );
     }
 
 

@@ -8,12 +8,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public class OrderItemInfo {
 
-    private long productId;
+    private final long productId;
 
-    private long optionId;
+    private final long optionId;
 
-    private long qty;
+    private final long qty;
 
-    private long price;
+    private final long price;
 
 }

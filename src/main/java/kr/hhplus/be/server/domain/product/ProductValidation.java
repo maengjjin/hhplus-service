@@ -8,15 +8,17 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ProductValidation {
 
-    private long productId;
+    private final long productId;
 
-    private long optionId;
+    private final long optionId;
 
-    private long stockQty;
+    private final long stockQty;
 
-    private ProductStatus status;
+    private final long orderQty;
 
-    private long price;
+    private final ProductStatus status;
+
+    private final long price;
 
 
     void stockValidation(long qty){
@@ -25,6 +27,20 @@ public class ProductValidation {
         }
     }
 
+
+    public ProductValidation decreaseStock() {
+        return new ProductValidation(productId, optionId, stockQty - orderQty, orderQty, status, price);
+    }
+
+
+    public ProductValidation (ProductOption option, long orderQty) {
+        this.productId = option.getProduct().getProductId();
+        this.optionId = option.getOptionId();
+        this.stockQty = option.getStockQty();
+        this.orderQty = orderQty;
+        this.status = option.getProduct().getStatus();
+        this.price = option.getPrice();
+    }
 
 
 }

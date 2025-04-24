@@ -6,34 +6,53 @@ import kr.hhplus.be.server.application.order.OrderCriteria;
 import kr.hhplus.be.server.application.order.OrderCriteria.OrderItem;
 import lombok.Getter;
 
-
+@Getter
 public class OrderCommand {
+
+    long productId;
+
+    long optionId;
+
+    long qty;
+
+    public OrderCommand(long productId, long optionId, long qty) {
+        this.productId = productId;
+        this.optionId = optionId;
+        this.qty = qty;
+    }
+
+
+    public static List<OrderCommand> toCommand(List<OrderCriteria.OrderItem> orderItems) {
+        return orderItems.stream()
+            .map(order -> new OrderCommand(order.getProductId(), order.getOptionId(), order.getQty()))
+            .collect(Collectors.toList());
+    }
 
 
     @Getter
-    public static class OrderItem {
+    public static class OrderItemDetail {
 
-        long productId;
+        private long productId;
 
-        long optionId;
+        private long optionId;
 
-        long qty;
+        private long qty;
 
-        public OrderItem(long productId, long optionId, long qty) {
+        private long price;
+
+
+        public OrderItemDetail(long productId, long optionId, long qty, long price) {
             this.productId = productId;
             this.optionId = optionId;
             this.qty = qty;
-        }
-
-
-        public static List<OrderItem> toCommand(List<OrderCriteria.OrderItem> orderItems) {
-            return orderItems.stream()
-                .map(order -> new OrderItem(order.getProductId(), order.getOptionId(), order.getQty()))
-                .collect(Collectors.toList());
+            this.price = price;
         }
 
 
     }
+
+
+
 
 
 

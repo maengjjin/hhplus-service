@@ -8,8 +8,7 @@ public class UserCommand {
 
     private long point;
 
-
-
-
-
+    public UserCommand(long userId) {
+        this.userId = userId;
+    }
 }
