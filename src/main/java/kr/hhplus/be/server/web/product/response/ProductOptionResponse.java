@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.web.product.response;
 
+import kr.hhplus.be.server.domain.product.ProductOption;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,8 +16,14 @@ public class ProductOptionResponse {
 
     private long stockQty;
 
-    public static ProductOptionResponse of(long optionId, String name, long price, long stockQty) {
-        return new ProductOptionResponse(optionId, name, price, stockQty);
+    // ✅ 여기가 핵심!
+    public static ProductOptionResponse from(ProductOption option) {
+        return new ProductOptionResponse(
+            option.getOptionId(),
+            option.getOptionName(),
+            option.getPrice(),
+            option.getStockQty()
+        );
     }
 }
 
