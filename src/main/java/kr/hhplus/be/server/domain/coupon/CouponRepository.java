@@ -14,4 +14,5 @@ public interface CouponRepository {
 
     Optional<Coupon> findById(long couponId);
 
+    Optional<Coupon> findByIdWithLock(long couponId);
 }

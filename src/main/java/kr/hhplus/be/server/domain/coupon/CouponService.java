@@ -56,7 +56,7 @@ public class CouponService {
 
 
     public Coupon validateCouponIssue(CouponCommand couponCommand) {
-        Coupon coupon = getCouponOrThrow(couponCommand.getCouponId());
+        Coupon coupon = couponRepository.findByIdWithLock(couponCommand.getCouponId()).orElseThrow(CouponNotFoundException::new);
 
         // 사용자 쿠폰 관계 검증
         validateNotAlreadyIssued(couponCommand.getUserId(), couponCommand.getCouponId());

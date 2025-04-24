@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.infrastructure.coupon;
 
 import java.util.Optional;
-import kr.hhplus.be.server.Exception.CouponException.CouponNotFoundException;
 import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.domain.coupon.CouponRepository;
 import kr.hhplus.be.server.domain.coupon.UserCoupon;
@@ -36,5 +35,10 @@ public class CouponRepositoryImpl implements CouponRepository{
     @Override
     public Optional<Coupon> findById(long couponId) {
         return couponJpaRepository.findById(couponId);
+    }
+
+    @Override
+    public Optional<Coupon> findByIdWithLock(long couponId) {
+        return couponJpaRepository.findByIdWithLock(couponId);
     }
 }
