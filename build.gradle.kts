@@ -44,14 +44,19 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 
     // Test
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.testcontainers:junit-jupiter")
-	testImplementation("org.testcontainers:mysql")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation("mysql:mysql-connector-java:8.0.33")
+	testImplementation("io.zonky.test:embedded-database-spring-test:2.6.0")
+	testImplementation("com.playtika.testcontainers:embedded-mysql:2.2.6")
 
 	//swagger
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+
+
+
+
 
 }
 

@@ -16,7 +16,8 @@ spring:
     generate-ddl: false
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
+      format_sql: true
     database-platform: org.hibernate.dialect.MySQL8Dialect
     properties:
       hibernate.timezone.default_storage: NORMALIZE_UTC
@@ -41,6 +42,10 @@ springdoc:
 logging:
   level:
     root: info
-    org.hibernate.SQL: debug  # SQL 쿼리 보고 싶을 때
-    org.springframework.boot.autoconfigure: info
+    org.hibernate.SQL: debug                  # SQL 쿼리
+    org.hibernate.type.descriptor.sql: trace  # 파라미터 바인딩
+    org.hibernate.engine.QueryParameters: trace
+    org.hibernate.engine.query.spi.HQLQueryPlan: trace
+    org.hibernate.jdbc.Expectation: debug     # update/delete 영향 row 수
+    org.hibernate.stat: debug                 # 통계 기반 쿼리 실행결과 추적 (이게 핵심!)
 
