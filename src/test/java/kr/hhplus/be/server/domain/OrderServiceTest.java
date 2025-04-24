@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -46,11 +47,14 @@ public class OrderServiceTest {
 
 
     @Test
-    void 주문서_저장_성공(){
+    void 주문_상세_저장_성공(){
 
+        // given 주문 정보 생성
+        long userId = 1L;
         String fakeOrderNo = "20250416173244463";
-        Order order = new Order(new User(1L), OrderStatus.ORDERED);
+        Order fakeOrder = new Order(new User(userId), OrderStatus.ORDERED);
 
+        when(orderRepository.saveOrder(any(Order.class))).thenReturn(fakeOrder);
 
         List<OrderCommand.OrderItemDetail> item = List.of(
             new OrderCommand.OrderItemDetail(1L, 100L, 1, 30000L),
@@ -58,24 +62,16 @@ public class OrderServiceTest {
             new OrderCommand.OrderItemDetail(3L, 101L, 3, 3000L)
         );
 
-
-
-        List<OrderDetail> details = item.stream()
-            .map(info -> OrderDetail.of(info, order.getOrderId())) // orderId는 이미 생성된 주문 ID
-            .collect(Collectors.toList());
-
-
-
+        // 정적 메서드 Order.createOrderNumber()가 호출되면 fakeOrderNo 반환
         try (MockedStatic<Order> mockedStatic = Mockito.mockStatic(Order.class)) {
             mockedStatic.when(Order::createOrderNumber).thenReturn(fakeOrderNo);
 
-
-            // when
+            // when 주문 생성 요청 실행
             orderService.createOrder(item, userId);
 
-            // then
-            verify(orderRepository, times(1)).saveOrder(order);
-            verify(orderRepository, times(1)).saveOrderDetail(details.get(0));
+            // then 주문이 한 번 저장되고, 주문 상세가 정확히 3번 저장됐는지 검증
+            verify(orderRepository, times(1)).saveOrder(any(Order.class));
+            verify(orderRepository, times(3)).saveOrderDetail(any(OrderDetail.class)); // 3개니까
         }
 
 

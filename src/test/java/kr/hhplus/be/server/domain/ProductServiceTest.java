@@ -60,9 +60,9 @@ public class ProductServiceTest {
          product = new Product(100L, "신발", 30_000L, ACTIVE);
 
         options = List.of(
-            new ProductOption(3000L, "250", 30_000L, 5L, product),
-            new ProductOption(3001L, "240", 30_000L, 7L, product),
-            new ProductOption(3002L, "230", 30_000L, 3L, product)
+            new ProductOption("250", 30_000L, 5L, product),
+            new ProductOption("240", 30_000L, 7L, product),
+            new ProductOption("230", 30_000L, 3L, product)
         );
 
         productInfo = ProductInfo.builder()
@@ -87,7 +87,7 @@ public class ProductServiceTest {
 
         product = product.ofList(options, product.getProductId(), product.getName(), product.getPrice(), product.getStatus());
 
-        Mockito.when(productRepository.findProductWithOptions(productId)).thenReturn(product);
+        Mockito.when(productRepository.findProductWithOptions(productId)).thenReturn(Optional.of(product));
 
 
         // when 상품 조회
@@ -99,13 +99,13 @@ public class ProductServiceTest {
 
     }
 
+
     @Test
     void 상품_조회시_상품이_없을때_예외발생(){
 
         // given 존재하지 않는 상품 ID에 대해 productRepository가 null을 반환하도록 설정
         long productId = 200L;
 
-        Mockito.when(productRepository.findProductWithOptions(productId)).thenThrow(ProductNotFoundException.class);
 
         // when then 예외 발생
         assertThrows(ProductNotFoundException.class, () ->
@@ -121,9 +121,9 @@ public class ProductServiceTest {
         product = new Product(100L, "신발", 30_000L, INACTIVE);
 
         options = List.of(
-            new ProductOption(3000L, "250", 30_000L, 5L, product),
-            new ProductOption(3001L, "240", 30_000L, 7L, product),
-            new ProductOption(3002L, "230", 30_000L, 3L, product)
+            new ProductOption("250", 30_000L, 5L, product),
+            new ProductOption("240", 30_000L, 7L, product),
+            new ProductOption("230", 30_000L, 3L, product)
         );
 
         productInfo = ProductInfo.builder()
@@ -132,11 +132,11 @@ public class ProductServiceTest {
             .build();
 
 
-        Mockito.when(productRepository.findProductWithOptions(100L)).thenReturn(product);
+        Mockito.when(productRepository.findProductWithOptions(100L)).thenReturn((Optional.of(product)));
 
 
 
-        // when: 예외 발생
+        // when 예외 발생
         assertThrows(ProductInactiveException.class, () ->
             productService.findProductInfo(100L));
 
@@ -151,10 +151,10 @@ public class ProductServiceTest {
 
         productValidation = new ProductValidation(100L, 101L, 50L, 2L, ACTIVE, 1000L);
 
-        option = new ProductOption(3000L, "250", 30_000L, 5L, product);
+        option = new ProductOption("250", 30_000L, 5L, product);
 
 
-        when(productRepository.findOptionWithProduct(100L, 101L)).thenReturn(option);
+        when(productRepository.findOptionWithProduct(100L, 101L)).thenReturn((Optional.of(option)));
 
 
         // when 상품 재고 조회
@@ -171,10 +171,10 @@ public class ProductServiceTest {
 
         // given 한 상품옵션의 재고가 부족하도록 설정 (요청 수량 > 재고)
 
-        option = new ProductOption(3000L, "250", 30_000L, 1L, product);
+        option = new ProductOption("250", 30_000L, 1L, product);
 
 
-        when(productRepository.findOptionWithProduct(100L, 101L)).thenReturn(option);
+        when(productRepository.findOptionWithProduct(100L, 101L)).thenReturn(Optional.of(option));
 
 
         // when then 재고 예외 검증
@@ -192,9 +192,9 @@ public class ProductServiceTest {
         // given 한 상품옵션의 재고가 부족하도록 설정 (요청 수량 > 재고)
         product = new Product(100L, "신발", 30_000L, INACTIVE);
 
-        option = new ProductOption(3000L, "250", 30_000L, 5L, product);
+        option = new ProductOption("250", 30_000L, 5L, product);
 
-        when(productRepository.findOptionWithProduct(100L, 101L)).thenReturn(option);
+        when(productRepository.findOptionWithProduct(100L, 101L)).thenReturn(Optional.of(option));
 
 
         // when then 재고 예외 검증
@@ -211,7 +211,6 @@ public class ProductServiceTest {
     void 상품_재고_차감_성공(){
 
         // given 한 상품옵션의 재고가 부족하도록 설정 (요청 수량 > 재고)
-
         ProductValidation originalValidation = new ProductValidation(100L, 101L, 50L, 2L, ACTIVE, 1000L);
         ProductValidation expectedValidation = new ProductValidation(100L, 101L, 48L, 2L, ACTIVE, 1000L);
 
@@ -220,19 +219,19 @@ public class ProductServiceTest {
         // when then 재고 예외 검증
         productService.decreaseStock(originalValidation);
 
-        ArgumentCaptor<ProductValidation> captor = ArgumentCaptor.forClass(ProductValidation.class);
+        ArgumentCaptor<Long> productIdCaptor = ArgumentCaptor.forClass(Long.class);
+        ArgumentCaptor<Long> optionIdCaptor = ArgumentCaptor.forClass(Long.class);
+        ArgumentCaptor<Long> stockQtyCaptor = ArgumentCaptor.forClass(Long.class);
 
-        verify(productRepository).updateStockQuantity(100L, 101L, 48L);
+        verify(productRepository).updateStockQuantity(
+            productIdCaptor.capture(),
+            optionIdCaptor.capture(),
+            stockQtyCaptor.capture()
+        );
 
-        ProductValidation actual = captor.getValue();
-
-        // 필드별로 확인
-        assertThat(actual.getProductId()).isEqualTo(expectedValidation.getProductId());
-        assertThat(actual.getOptionId()).isEqualTo(expectedValidation.getOptionId());
-        assertThat(actual.getStockQty()).isEqualTo(expectedValidation.getStockQty());
-        assertThat(actual.getOrderQty()).isEqualTo(expectedValidation.getOrderQty());
-        assertThat(actual.getPrice()).isEqualTo(expectedValidation.getPrice());
-        assertThat(actual.getStatus()).isEqualTo(expectedValidation.getStatus());
+        assertThat(productIdCaptor.getValue()).isEqualTo(100L);
+        assertThat(optionIdCaptor.getValue()).isEqualTo(101L);
+        assertThat(stockQtyCaptor.getValue()).isEqualTo(48L);
 
     }
 
