@@ -1,12 +1,16 @@
 package kr.hhplus.be.server.domain.order;
 
 import java.util.List;
-import org.springframework.stereotype.Repository;
+import java.util.Optional;
+import org.springframework.stereotype.Component;
 
-@Repository
+
+@Component
 public interface OrderRepository {
 
     Order saveOrder(Order order);
 
     void saveOrderDetail(OrderDetail detail);
+
+    Optional<Order> findByOrderNoAndUserId(String orderNo, long userId);
 }

@@ -2,6 +2,8 @@ package kr.hhplus.be.server.domain.product;
 
 import static kr.hhplus.be.server.domain.product.Product.productValidation;
 
+import java.util.Optional;
+import kr.hhplus.be.server.Exception.ProductException.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +15,7 @@ public class ProductService {
 
     public ProductInfo findProductInfo(long productId) {
 
-        Product product = productRepository.findProductWithOptions(productId);
+        Product product = productRepository.findProductWithOptions(productId).orElseThrow(ProductNotFoundException::new);
 
         productValidation(product.getStatus());
 
@@ -23,7 +25,7 @@ public class ProductService {
 
     public ProductValidation checkProductAvailability(ProductCommand product) {
 
-        ProductOption option = productRepository.findOptionWithProduct(product.getProductId(), product.getOptionId());
+        ProductOption option = productRepository.findOptionWithProduct(product.getProductId(), product.getOptionId()).orElseThrow(ProductNotFoundException::new);
 
         productValidation(option.getProduct().getStatus());
 
@@ -41,5 +43,7 @@ public class ProductService {
         ProductValidation decreaseStock = stockOrder.decreaseStock();
 
         productRepository.updateStockQuantity(decreaseStock.getProductId(), decreaseStock.getOptionId(), decreaseStock.getStockQty());
+
+
     }
 }

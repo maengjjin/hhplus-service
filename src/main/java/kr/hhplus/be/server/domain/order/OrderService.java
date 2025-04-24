@@ -4,18 +4,20 @@ package kr.hhplus.be.server.domain.order;
 import java.util.List;
 import java.util.stream.Collectors;
 import kr.hhplus.be.server.domain.user.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
 @Service
+@RequiredArgsConstructor
 public class OrderService {
 
-    OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
     public Order createOrder(List<OrderCommand.OrderItemDetail> item, long userId) {
 
         // 주문 저장
-        Order order = orderRepository.saveOrder(Order.of(new User(userId), OrderStatus.ORDERED));
+        Order order = orderRepository.saveOrder(new Order(new User(userId), OrderStatus.ORDERED));
 
 
         List<OrderDetail> details = item.stream()

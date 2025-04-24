@@ -11,43 +11,48 @@ public class PointService {
 
     private final PointRepository pointRepository;
 
-    public User charge(User user, long amount) {
+    public Point charge(User user, long amount) {
 
-        Point point = new Point(user.getPoint());
+        long beforePoint = user.getPoint();
 
-        point.add(amount);
+        Point point = new Point(beforePoint);
 
         // 충전
-        pointRepository.updatePoint(user.getUserId(), point.getPoint());
+        point.add(amount);
+
+        user.updatePoint(point.getPoint());
 
         PointHistory pointHistory = PointHistory.builder()
             .userId(user.getUserId())
             .amount(amount)
-            .beforeAmount(user.getPoint())
-            .afterAmount(point.getPoint())
+            .beforeAmount(beforePoint)
+            .afterAmount(user.getPoint())
             .type(TransactionType.CHARGE)
             .build();
 
         // 히스토리 저장
         pointRepository.savePointHistory(pointHistory);
 
-        return  user;
+        return  point;
     }
 
 
     public void usePoint(User user, long amount) {
 
+        long beforePoint = user.getPoint();
+
         Point point = new Point(user.getPoint());
 
         point.use(amount);
 
-        pointRepository.updatePoint(user.getUserId(), point.getPoint());
+        user.updatePoint(point.getPoint());
+
 
         PointHistory pointHistory = PointHistory.builder()
             .userId(user.getUserId())
             .amount(amount)
-            .beforeAmount(user.getPoint())
-            .afterAmount(point.getPoint())
+            .beforeAmount(beforePoint)
+            .afterAmount(user.getPoint())
             .type(TransactionType.USE)
             .build();
 

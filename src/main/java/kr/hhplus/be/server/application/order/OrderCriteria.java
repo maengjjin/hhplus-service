@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.application.order;
 
 import java.util.List;
+import kr.hhplus.be.server.web.order.request.OrderRequest;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,6 +20,11 @@ public class OrderCriteria {
         this.userId = userId;
         this.couponId = couponId;
         this.items = items;
+    }
+
+    public static OrderCriteria of(OrderRequest request) {
+
+       return new OrderCriteria(request.getUserId(), request.getCouponId(), request.getItems());
     }
 
 

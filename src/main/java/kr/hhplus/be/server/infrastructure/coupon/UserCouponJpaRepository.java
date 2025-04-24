@@ -19,17 +19,9 @@ public interface UserCouponJpaRepository extends JpaRepository<UserCoupon, Long>
             WHERE uc.user.userId = :userId
             AND uc.coupon.couponId = :couponId
            """)
-    Optional<UserCoupon> findWithCouponByUserIdAndCouponId(@Param("userId") Long userId, @Param("couponId") Long couponId);
+    UserCoupon findWithCouponByUserIdAndCouponId(@Param("userId") Long userId, @Param("couponId") Long couponId);
 
 
-    @Modifying
-    @Query(""" 
-            UPDATE UserCoupon uc
-            SET uc.couponYn = 'Y',
-            uc.updateAt = CURRENT_TIMESTAMP
-            WHERE uc.user.userId = :userId
-            AND uc.coupon.couponId = :couponId
-            """)
-    void updateCouponUsed(@Param("userId") long userId, @Param("couponId") long couponId);
+
 
 }

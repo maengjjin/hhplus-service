@@ -4,9 +4,12 @@ package kr.hhplus.be.server.application.order;
 import java.util.ArrayList;
 import java.util.List;
 import kr.hhplus.be.server.domain.coupon.CouponService;
+import kr.hhplus.be.server.domain.coupon.UserCoupon;
 import kr.hhplus.be.server.domain.coupon.UserCouponInfo;
 import kr.hhplus.be.server.domain.order.Order;
 import kr.hhplus.be.server.domain.order.OrderCommand;
+import kr.hhplus.be.server.domain.order.OrderPaymentCalculator;
+import kr.hhplus.be.server.domain.order.OrderPaymentCalculator.PriceSummary;
 import kr.hhplus.be.server.domain.order.OrderService;
 import kr.hhplus.be.server.domain.payment.Payment;
 import kr.hhplus.be.server.domain.payment.PaymentService;
@@ -37,13 +40,13 @@ public class OrderFacade {
     private final PointService pointService;
 
     @Transactional
-    public void createOrderWithPayment(OrderCriteria orderCriteria) {
+    public OrderResponse createOrderWithPayment(OrderCriteria orderCriteria) {
 
         // 사용자 조회
         User user = userService.getUserInfo(orderCriteria.getUserId());
 
         // 쿠폰 확인
-        UserCouponInfo userCoupon = couponService.findUserCoupon(orderCriteria.getUserId(), orderCriteria.getCouponId());
+        UserCoupon userCoupon = couponService.getValidUserCouponForOrder(orderCriteria.getUserId(), orderCriteria.getCouponId());
 
         // 주문상품 list를 만들기 위해 item 작성
         List<OrderCommand> item = OrderCommand.toCommand(orderCriteria.getItems());
@@ -65,27 +68,32 @@ public class OrderFacade {
 
         }
 
-        // 주문서 저장
-        Order order = orderService.createOrder(orderItemInfoList, orderCriteria.getUserId());
-
-        // 결제
-        Payment payment = paymentService.createPayment(user, order.getOrderId(), userCoupon, orderItemInfoList);
-
-        // 포인트 차감
-        pointService.usePoint(user, payment.getPaidPay());
-
-        // 쿠폰 사용
-        pointService.usePoint(user, payment.getPaidPay());
-
-        // 쿠폰 사용
-        couponService.useCoupon(userCoupon);
-
         // 재고 차감
         for (ProductValidation validation : productValidationList) {
 
             productService.decreaseStock(validation);
 
         }
+
+        // 주문서 저장
+        Order order = orderService.createOrder(orderItemInfoList, orderCriteria.getUserId());
+
+        OrderPaymentCalculator calculator = new OrderPaymentCalculator();
+
+        // 계산 금액
+        PriceSummary priceSummary = calculator.calculateOrderAmount(user.getPoint(), userCoupon, orderItemInfoList);
+
+        // 쿠폰 사용
+        couponService.useCoupon(userCoupon);
+
+        // 포인트 차감
+        pointService.usePoint(user, priceSummary.getTotalPrice());
+
+        // 결제
+        Payment payment = paymentService.createPayment(user, order.getOrderId(), userCoupon.getCoupon().getCouponId(), priceSummary);
+
+
+       return  new OrderResponse(order, item, payment);
 
 
     }

@@ -29,4 +29,20 @@ public class CouponException {
             super("쿠폰이 이미 사용 되었습니다");
         }
     }
+
+
+
+    public static class AlreadyIssuedCouponException extends RuntimeException {
+
+        public AlreadyIssuedCouponException() {
+            super("이미 발급 된 쿠폰 입니다");
+        }
+    }
+
+    public static class CouponOutOfStockException  extends RuntimeException {
+
+        public CouponOutOfStockException() {
+            super("쿠폰 재고가 없습니다.");
+        }
+    }
 }

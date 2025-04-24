@@ -12,6 +12,5 @@ import org.springframework.data.repository.query.Param;
 
 public interface PaymentJpaRepository extends JpaRepository<Payment, Long> {
 
-
-
+    Optional<Payment> findByPaymentIdAndUserId(long paymentId, long userId);
 }

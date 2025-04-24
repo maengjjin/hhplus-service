@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.infrastructure.product;
 
 import java.util.Optional;
-import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.ProductOption;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,5 +27,17 @@ public interface ProductOptionJpaRepository extends JpaRepository<ProductOption,
             SET po.stockQty = :stockQty
             WHERE po.optionId = :optionId AND po.product.productId = :productId
             """)
-    void updateStockQuantity(@Param("stockQty") long stockQty, @Param("optionId") long optionId,@Param("productId") long productId);
+    void updateStockQuantity(@Param("productId") long productId, @Param("optionId") long optionId,@Param("stockQty") long stockQty);
+
+
+    @Modifying
+    @Query("""
+            UPDATE ProductOption po
+            SET po.stockQty = :stockQty
+            WHERE po.optionId = :optionId AND po.product.productId = :productId
+            """)
+    int updateStockQuantity2(@Param("productId") long productId, @Param("optionId") long optionId,@Param("stockQty") long stockQty);
+
+
+
 }

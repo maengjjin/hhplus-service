@@ -1,16 +1,14 @@
 package kr.hhplus.be.server.domain.payment;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.List;
-import kr.hhplus.be.server.Exception.CouponException.CouponMinimumAmountNotMetException;
-import kr.hhplus.be.server.domain.coupon.CouponType;
-import kr.hhplus.be.server.domain.coupon.UserCouponInfo;
-import kr.hhplus.be.server.domain.order.OrderCommand;
+import kr.hhplus.be.server.domain.order.OrderPaymentCalculator.PriceSummary;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,74 +17,48 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
+@Table(name = "payment")
 @Getter
 public class Payment {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long payId;
+    @Column(name = "payment_id")
+    private long paymentId;
 
+    @Column(name = "order_id")
     private long orderId;
 
+    @Column(name = "coupon_id")
     private long couponId;
 
+    @Column(name = "product_price")
     private long productPrice;
 
+    @Column(name = "user_id")
     private long userId;
 
+    @Column(name = "paid_pay")
     private long paidPay;
 
+    @Column(name = "coupon_price")
     private long couponPrice;
 
+    @Column(name = "create_at")
     private LocalDateTime createAt;
 
 
-    // 총 상품 금액 계산
-    void totalProductPrice(List<OrderCommand.OrderItemDetail> item){
 
-        this.productPrice = item.stream()
-            .mapToLong(i -> i.getQty() * i.getPrice())
-            .sum();
-    }
-
-    // 쿠폰 사용금액 검증
-    void validateCouponCondition(UserCouponInfo userCoupon){
-
-        if(this.productPrice < userCoupon.getMinPurchaseAmount()){
-            throw new CouponMinimumAmountNotMetException(userCoupon.getMinPurchaseAmount(), this.productPrice);
-        }
-
-    }
-
-    // 쿠폰 금액 계산
-    void CouponCalculator(UserCouponInfo userCoupon) {
-
-        // 고정금액
-        if (CouponType.FIXED == userCoupon.getType()) {
-            this.couponPrice = userCoupon.getDiscountAmount();
-        } else {
-            // 할인 쿠폰
-            long discount = this.productPrice * userCoupon.getDiscountRate() / 100;
-
-            this.couponPrice = Math.min(discount, userCoupon.getMaxDiscountAmount());
-
-        }
-
-    }
-
-    // 총 금액 계산
-    void totalAmount(){
-        this.paidPay = this.productPrice - this.couponPrice;
-    }
-
-
-    public static Payment create(long orderId, long userId, long couponId) {
+    public static Payment create(long orderId, long userId, long couponId, PriceSummary priceSummary) {
         Payment payment = new Payment();
         payment.orderId = orderId;
         payment.userId = userId;
         payment.couponId = couponId;
+        payment.productPrice = priceSummary.getProductPrice();
+        payment.paidPay = priceSummary.getTotalPrice();
+        payment.couponPrice = priceSummary.getCouponPrice();
         return payment;
     }
+
 
 }

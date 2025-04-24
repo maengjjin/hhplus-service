@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.infrastructure.user;
 
+import java.util.Optional;
 import kr.hhplus.be.server.Exception.UserException.UserNotFoundException;
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserRepository;
@@ -13,11 +14,14 @@ public class UserRepositoryImpl implements UserRepository {
     private final UserJpaRepository userJpaRepository;
 
     @Override
-    public User findById(long userId) {
-        return userJpaRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+    public Optional<User> findById(long userId) {
+        return userJpaRepository.findById(userId);
     }
 
-
+    @Override
+    public User save(User user) {
+        return userJpaRepository.save(user);
+    }
 
 
 }

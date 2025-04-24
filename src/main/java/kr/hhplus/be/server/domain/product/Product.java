@@ -3,6 +3,7 @@ package kr.hhplus.be.server.domain.product;
 import static kr.hhplus.be.server.domain.product.ProductStatus.INACTIVE;
 import static kr.hhplus.be.server.domain.product.ProductStatus.SOLD_OUT;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -29,20 +30,25 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Getter
-@Table(name = "PRODUCT")
+@Table(name = "product")
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 증가
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
     private long productId;
 
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "price")
     private long price;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private ProductStatus status;
 
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
@@ -54,7 +60,11 @@ public class Product {
         this.createdAt = LocalDateTime.now();
     }
 
-
+    public Product(String name, long price, ProductStatus status){
+        this.name = name;
+        this.price = price;
+        this.status = status;
+    }
 
     public Product(long productId, String name, long price, ProductStatus status){
         this.productId = productId;
