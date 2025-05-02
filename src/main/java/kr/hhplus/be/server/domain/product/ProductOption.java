@@ -8,14 +8,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import kr.hhplus.be.server.Exception.ProductException.OutOfStockException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -67,6 +66,16 @@ public class ProductOption {
         this.price = price;
         this.stockQty = stockQty;
         this.product = product;
+    }
+
+    void decreaseStock(long qty){
+        stockQty -= qty;
+    }
+
+    void stockValidation(long qty){
+        if(qty > stockQty) {
+            throw new OutOfStockException();
+        }
     }
 
 

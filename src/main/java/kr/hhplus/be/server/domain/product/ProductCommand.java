@@ -1,7 +1,9 @@
 package kr.hhplus.be.server.domain.product;
 
 
-import kr.hhplus.be.server.domain.order.OrderCommand;
+import java.util.List;
+import java.util.stream.Collectors;
+import kr.hhplus.be.server.application.order.OrderCriteria;
 import lombok.Getter;
 
 
@@ -20,9 +22,15 @@ public class ProductCommand {
         this.qty = qty;
     }
 
-    public static ProductCommand toCommand(OrderCommand item){
-        return new ProductCommand(item.getProductId(), item.getOptionId(), item.getQty());
+
+
+    public static List<ProductCommand> toCommand(List<OrderCriteria.OrderItem> orderItems) {
+        return orderItems.stream()
+            .map(order -> new ProductCommand(order.getProductId(), order.getOptionId(), order.getQty()))
+            .collect(Collectors.toList());
     }
+
+
 
 
 

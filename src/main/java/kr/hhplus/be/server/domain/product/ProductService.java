@@ -2,8 +2,12 @@ package kr.hhplus.be.server.domain.product;
 
 import static kr.hhplus.be.server.domain.product.Product.productValidation;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import kr.hhplus.be.server.Exception.ProductException.ProductNotFoundException;
+import kr.hhplus.be.server.domain.product.ProductDTO.ProductOptionResult;
+import kr.hhplus.be.server.domain.product.ProductDTO.ProductOrderResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,37 +17,56 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductInfo findProductInfo(long productId) {
+    public ProductOptionResult findProductInfo(long productId) {
 
         Product product = productRepository.findProductWithOptions(productId).orElseThrow(ProductNotFoundException::new);
 
         productValidation(product.getStatus());
 
-        return new ProductInfo(product, product.getOptions());
+        return new ProductOptionResult(product, product.getOptions());
     }
 
 
-    public ProductValidation checkProductAvailability(ProductCommand product) {
-
-        ProductOption option = productRepository.findOptionWithProduct(product.getProductId(), product.getOptionId()).orElseThrow(ProductNotFoundException::new);
-
-        productValidation(option.getProduct().getStatus());
-
-        ProductValidation validation = new ProductValidation(option, product.getQty());
-
-        validation.stockValidation(product.getQty());
-
-        return validation;
-
-    }
 
 
-    public void decreaseStock(ProductValidation stockOrder) {
+    public List<ProductOrderResult> prepareOrderItems(List<ProductCommand> item) {
 
-        ProductValidation decreaseStock = stockOrder.decreaseStock();
+        List<ProductOrderResult> productInfo = new ArrayList<>();
 
-        productRepository.updateStockQuantity(decreaseStock.getProductId(), decreaseStock.getOptionId(), decreaseStock.getStockQty());
+        List<ProductCommand> sorted = item.stream()
+            .sorted(Comparator.comparing(ProductCommand::getProductId)
+                .thenComparing(ProductCommand::getOptionId))
+            .toList();
 
+
+        for(ProductCommand order : sorted){
+            // 상품 조회
+            ProductOption option = productRepository.findOptionWithProduct(order.getProductId(), order.getOptionId()).orElseThrow(ProductNotFoundException::new);
+
+            Product.productValidation(option.getProduct().getStatus());
+
+            // 재고 검증
+            option.stockValidation(order.getQty());
+
+            // 재고 감소
+            option.decreaseStock(order.getQty());
+
+            long productId = option.getProduct().getProductId();
+            long optionId = option.getOptionId();
+            String productName = option.getProduct().getName();
+            String optionName = option.getOptionName();
+            long stockQty = option.getStockQty();
+            long orderQty = order.getQty();
+            ProductStatus status = option.getProduct().getStatus();
+            long price = option.getPrice();
+
+
+            productInfo.add(new ProductOrderResult(productId, optionId, stockQty, orderQty, status, price, productName, optionName));
+
+        }
+
+
+        return productInfo;
 
     }
 }
