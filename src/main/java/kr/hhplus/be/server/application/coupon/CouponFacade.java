@@ -1,10 +1,7 @@
 package kr.hhplus.be.server.application.coupon;
 
-import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.domain.coupon.CouponCommand;
 import kr.hhplus.be.server.domain.coupon.CouponService;
-import kr.hhplus.be.server.domain.coupon.UserCoupon;
-import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +18,14 @@ public class CouponFacade {
     @Autowired
     private CouponService couponService;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public void createCoupon(CouponCommand couponCommand) {
 
         // 사용자 확인
         userService.getUserInfo(couponCommand.getUserId());
 
-        // 쿠폰 자체 검증
-        couponService.validateCouponIssue(couponCommand);
-
-        // 유저 쿠폰발급 저장
-        couponService.createUserCoupon(couponCommand);
-
+        // 쿠폰 자체 검증 & 쿠폰발급 저장
+        couponService.couponIssue(couponCommand);
 
     }
 

@@ -14,7 +14,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -81,8 +80,6 @@ public class Coupon {
             throw new CouponOutOfStockException();
         }
         leftQty--;
-
-        System.out.println("leftQty = " + leftQty);
     }
 
 
