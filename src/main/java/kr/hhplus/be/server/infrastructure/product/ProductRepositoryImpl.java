@@ -17,9 +17,9 @@ public class ProductRepositoryImpl implements ProductRepository {
 
 
     @Override
-    public Optional<Product> findProductWithOptions(long productId) {
+    public Optional<Product> findProductWithAllOptions(long productId) {
 
-        return productJpaRepository.findProductWithOptions(productId);
+        return productJpaRepository.findProductWithAllOptions(productId);
     }
 
     @Override
@@ -28,10 +28,6 @@ public class ProductRepositoryImpl implements ProductRepository {
         return productOptionJpaRepository.findOptionWithProduct(productId, optionId);
     }
 
-    @Override
-    public void updateStockQuantity(long productId, long optionId, long stockQty) {
-        productOptionJpaRepository.updateStockQuantity(productId, optionId, stockQty);
-    }
 
     @Override
     public Product save(Product product) {
@@ -41,11 +37,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public ProductOption save(ProductOption option) {
         return productOptionJpaRepository.save(option);
-    }
-
-    @Override
-    public int updateStockQuantity2(long productId, long optionId, long stockQty) {
-        return  productOptionJpaRepository.updateStockQuantity2(productId, optionId, stockQty);
     }
 
 

@@ -19,7 +19,7 @@ public class ProductService {
 
     public ProductOptionResult findProductInfo(long productId) {
 
-        Product product = productRepository.findProductWithOptions(productId).orElseThrow(ProductNotFoundException::new);
+        Product product = productRepository.findProductWithAllOptions(productId).orElseThrow(ProductNotFoundException::new);
 
         productValidation(product.getStatus());
 
