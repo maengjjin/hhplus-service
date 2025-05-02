@@ -3,7 +3,7 @@ package kr.hhplus.be.server.web.product.controller;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
-import kr.hhplus.be.server.domain.product.ProductInfo;
+import kr.hhplus.be.server.domain.product.ProductDTO.ProductOptionResult;
 import kr.hhplus.be.server.domain.product.ProductService;
 import kr.hhplus.be.server.web.ApiResult;
 import kr.hhplus.be.server.web.product.response.ProductResponse;
@@ -24,7 +24,7 @@ public class ProductController {
     @GetMapping("/{productId}")
     public ApiResult<ProductResponse> getProduct(@Parameter(hidden = true) @PathVariable long productId) {
 
-        ProductInfo info = productService.findProductInfo(productId); // 도메인에서 가져옴
+        ProductOptionResult info = productService.findProductInfo(productId); // 도메인에서 가져옴
 
         return ApiResult.success(ProductResponse.from(info));
 

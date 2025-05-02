@@ -2,7 +2,7 @@ package kr.hhplus.be.server.web.product.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
-import kr.hhplus.be.server.domain.product.ProductInfo;
+import kr.hhplus.be.server.domain.product.ProductDTO.ProductOptionResult;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -23,7 +23,7 @@ public class ProductResponse {
     }
 
 
-    public static ProductResponse from(ProductInfo info) {
+    public static ProductResponse from(ProductOptionResult info) {
         List<ProductOptionResponse> optionList = info.getOptions().stream()
             .map(ProductOptionResponse::from)
             .toList();

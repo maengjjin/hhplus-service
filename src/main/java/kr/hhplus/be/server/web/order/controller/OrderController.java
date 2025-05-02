@@ -4,7 +4,6 @@ package kr.hhplus.be.server.web.order.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.application.order.OrderCriteria;
 import kr.hhplus.be.server.application.order.OrderFacade;
-import kr.hhplus.be.server.domain.order.OrderService;
 import kr.hhplus.be.server.web.ApiResult;
 import kr.hhplus.be.server.web.order.request.OrderRequest;
 
@@ -25,8 +24,8 @@ public class OrderController {
 
     @PostMapping("/payment")
     public ApiResult<OrderResponse> orderProduct(@RequestBody OrderRequest orderRequest){
-        OrderResponse response = orderFacade.createOrderWithPayment(OrderCriteria.of(orderRequest));
-        return ApiResult.success(response);
+        orderFacade.createOrder(OrderCriteria.of(orderRequest));
+        return ApiResult.success();
     }
 
 
