@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.domain.order;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 
@@ -12,5 +12,5 @@ public interface OrderRepository {
 
     void saveAll(List<OrderDetail> details);
 
-    Optional<Order> findByOrderNoAndUserId(String orderNo, long userId);
+    List<Long> findTopSellingProductsBetween(LocalDateTime start, LocalDateTime end);
 }

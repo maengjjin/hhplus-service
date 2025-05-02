@@ -13,4 +13,6 @@ public interface ProductRepository {
     Product save(Product product);
 
     ProductOption save(ProductOption option);
+
+    Optional<Product> findById(long productId);
 }

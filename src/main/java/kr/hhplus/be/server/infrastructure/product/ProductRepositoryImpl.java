@@ -39,5 +39,10 @@ public class ProductRepositoryImpl implements ProductRepository {
         return productOptionJpaRepository.save(option);
     }
 
+    @Override
+    public Optional<Product> findById(long productId) {
+        return productJpaRepository.findById(productId);
+    }
+
 
 }
