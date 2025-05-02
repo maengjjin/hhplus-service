@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.domain.payment;
 
 
-import kr.hhplus.be.server.domain.coupon.UserCouponInfo;
 import kr.hhplus.be.server.domain.order.OrderPaymentCalculator.PriceSummary;
 import kr.hhplus.be.server.domain.user.User;
 import lombok.RequiredArgsConstructor;
