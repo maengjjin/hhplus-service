@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -34,6 +35,9 @@ public class User {
 
     @Column(name = "update_at")
     private LocalDateTime updateAt;
+
+    @Version
+    private int version;
 
     @Builder
     private User(long userId, long point){
