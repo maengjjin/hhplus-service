@@ -2,16 +2,28 @@ package kr.hhplus.be.server.infrastructure.product;
 
 import java.util.Optional;
 import kr.hhplus.be.server.domain.product.ProductOption;
+import org.hibernate.PessimisticLockException;
+import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductOptionJpaRepository extends JpaRepository<ProductOption, Long> {
 
 
+    @Retryable(
+        value = {
+            CannotAcquireLockException.class,
+            PessimisticLockException.class
+        },
+        maxAttempts = 3,
+        backoff = @Backoff(delay = 1000)
+    )
     @Query(""" 
              SELECT po
              FROM ProductOption po

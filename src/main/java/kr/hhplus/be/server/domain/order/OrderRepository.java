@@ -10,7 +10,7 @@ public interface OrderRepository {
 
     Order saveOrder(Order order);
 
-    void saveOrderDetail(OrderDetail detail);
+    void saveAll(List<OrderDetail> details);
 
     Optional<Order> findByOrderNoAndUserId(String orderNo, long userId);
 }

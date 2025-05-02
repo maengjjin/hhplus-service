@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.infrastructure.product;
 
 import java.util.Optional;
-import kr.hhplus.be.server.Exception.ProductException.ProductNotFoundException;
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.ProductOption;
 import kr.hhplus.be.server.domain.product.ProductRepository;

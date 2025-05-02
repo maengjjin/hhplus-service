@@ -2,21 +2,19 @@ package kr.hhplus.be.server.domain.coupon;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import kr.hhplus.be.server.Exception.CouponException.CouponAlreadyUsedException;
 import kr.hhplus.be.server.Exception.CouponException.CouponExpiredException;
-import kr.hhplus.be.server.domain.user.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,16 +30,15 @@ public class UserCoupon {
     @Column(name = "user_coupon_id")
     private long userCouponId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private long userId;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
 
     @Column(name = "coupon_yn")
-    private String couponYn;
+    @Enumerated(EnumType.STRING)
+    private CouponStatus couponYn;
 
     @Column(name = "create_at")
     private LocalDateTime createAt;
@@ -49,18 +46,13 @@ public class UserCoupon {
     @Column(name = "update_at")
     private LocalDateTime updateAt;
 
-    public UserCoupon(User user, Coupon coupon, String couponYn) {
-        this.user = user;
-        this.coupon = coupon;
-        this.couponYn = couponYn;
-    }
 
-    public static UserCoupon create(User user, Coupon coupon) {
+    public static UserCoupon create(long userId, Coupon coupon) {
 
         UserCoupon userCoupon = new UserCoupon();
-        userCoupon.user = user;
+        userCoupon.userId = userId;
         userCoupon.coupon = coupon;
-        userCoupon.couponYn = "N";
+        userCoupon.couponYn = CouponStatus.NOT_USED;
         userCoupon.createAt = LocalDateTime.now();
         userCoupon.updateAt = LocalDateTime.now();
 
@@ -69,13 +61,13 @@ public class UserCoupon {
     }
 
     public void useCoupon(){
-        this.couponYn = "Y";
+        this.couponYn = CouponStatus.USED;
         this.updateAt = LocalDateTime.now();
     }
 
 
     void validateUsable(){
-        if("Y".equals(couponYn)){
+        if(couponYn == CouponStatus.USED){
             throw new CouponAlreadyUsedException();
         }
     }

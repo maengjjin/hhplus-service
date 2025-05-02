@@ -14,7 +14,7 @@ public interface UserCouponJpaRepository extends JpaRepository<UserCoupon, Long>
             SELECT uc
             FROM UserCoupon uc
             JOIN FETCH uc.coupon
-            WHERE uc.user.userId = :userId
+            WHERE uc.userId = :userId
             AND uc.coupon.couponId = :couponId
            """)
     UserCoupon findWithCouponByUserIdAndCouponId(@Param("userId") Long userId, @Param("couponId") Long couponId);

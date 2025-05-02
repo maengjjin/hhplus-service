@@ -22,11 +22,9 @@ public class CouponService {
             throw new CouponNotFoundException();
         }
 
-        UserCouponInfo userCouponInfo = new UserCouponInfo(userCoupon.getCoupon(), userCoupon);
+        userCoupon.validateUsable();
 
-        userCouponInfo.validateUsable();
-
-        userCouponInfo.validateNotExpired();
+        userCoupon.validateNotExpired();
 
        return userCoupon;
     }
@@ -72,15 +70,6 @@ public class CouponService {
 
         // 사용자 쿠폰 발급
         couponRepository.save(UserCoupon.create(couponCommand.getUserId(), coupon));
-
-    }
-
-    public void createUserCoupon(CouponCommand couponCommand) {
-
-        UserCoupon userCoupon = UserCoupon.create(new User(couponCommand.userId), new Coupon(couponCommand.couponId));
-
-        couponRepository.save(userCoupon);
-
 
     }
 

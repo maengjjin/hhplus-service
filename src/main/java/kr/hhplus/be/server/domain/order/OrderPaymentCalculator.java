@@ -5,8 +5,7 @@ import kr.hhplus.be.server.Exception.CouponException.CouponMinimumAmountNotMetEx
 import kr.hhplus.be.server.Exception.PointException.InsufficientPointBalanceException;
 import kr.hhplus.be.server.domain.coupon.CouponType;
 import kr.hhplus.be.server.domain.coupon.UserCoupon;
-import kr.hhplus.be.server.domain.coupon.UserCouponInfo;
-import kr.hhplus.be.server.domain.order.OrderCommand.OrderItemDetail;
+import kr.hhplus.be.server.domain.product.ProductDTO.ProductOrderResult;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -21,18 +20,18 @@ public class OrderPaymentCalculator {
 
 
     // 총 상품 금액 계산
-    void totalProductPrice(List<OrderItemDetail> item){
+    void totalProductPrice(List<ProductOrderResult>  item){
 
         this.productPrice = item.stream()
-            .mapToLong(i -> i.getQty() * i.getPrice())
+            .mapToLong(i -> i.getOrderQty() * i.getPrice())
             .sum();
     }
 
     // 쿠폰 사용금액 검증
-    void validateCouponCondition(UserCoupon userCoupon){
+    void validateCouponCondition(long minPurchaseAmount){
 
-        if(this.productPrice < userCoupon.getCoupon().getMinPurchaseAmount()){
-            throw new CouponMinimumAmountNotMetException(userCoupon.getCoupon().getMinPurchaseAmount(), this.productPrice);
+        if(this.productPrice < minPurchaseAmount){
+            throw new CouponMinimumAmountNotMetException(minPurchaseAmount, this.productPrice);
         }
 
     }
@@ -67,11 +66,11 @@ public class OrderPaymentCalculator {
 
     }
 
-    public PriceSummary calculateOrderAmount(long point, UserCoupon userCoupon, List<OrderCommand.OrderItemDetail> item) {
+    public PriceSummary calculateOrderAmount(long point, UserCoupon userCoupon, List<ProductOrderResult> productOrderResultList) {
 
-        totalProductPrice(item);
+        totalProductPrice(productOrderResultList);
 
-        validateCouponCondition(userCoupon);
+        validateCouponCondition(userCoupon.getCoupon().getMinPurchaseAmount());
 
         CouponCalculator(userCoupon);
 

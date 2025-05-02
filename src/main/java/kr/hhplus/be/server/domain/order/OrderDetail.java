@@ -44,13 +44,13 @@ public class OrderDetail {
     private LocalDateTime createAt;
 
 
-    public static OrderDetail of(OrderCommand.OrderItemDetail detail, long orderId) {
+    public static OrderDetail of(OrderCommand.OrderItem orderItem, long orderId) {
         return new OrderDetail(
             orderId,
-            detail.getProductId(),
-            detail.getOptionId(),
-            detail.getPrice(),
-            detail.getQty()
+            orderItem.getProductId(),
+            orderItem.getOptionId(),
+            orderItem.getPrice(),
+            orderItem.getQty()
         );
     }
 
