@@ -23,6 +23,8 @@ public class ProductRank {
 
     private long productId;
 
+    private long orderQty;
+
     private String productName;
 
     private long orderRank;

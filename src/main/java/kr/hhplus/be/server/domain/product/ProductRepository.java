@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.product;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +16,6 @@ public interface ProductRepository {
     ProductOption save(ProductOption option);
 
     Optional<Product> findById(long productId);
+
+    List<Product> findByIdIn(List<Long> productIds);
 }
