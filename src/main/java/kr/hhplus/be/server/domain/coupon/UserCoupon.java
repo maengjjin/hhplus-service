@@ -1,9 +1,8 @@
 package kr.hhplus.be.server.domain.coupon;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,7 +36,7 @@ public class UserCoupon {
     private Coupon coupon;
 
     @Column(name = "coupon_yn")
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = CouponStatusConverter.class)
     private CouponStatus couponYn;
 
     @Column(name = "create_at")

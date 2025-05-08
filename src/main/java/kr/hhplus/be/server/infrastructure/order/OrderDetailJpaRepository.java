@@ -4,7 +4,7 @@ package kr.hhplus.be.server.infrastructure.order;
 import java.time.LocalDateTime;
 import java.util.List;
 import kr.hhplus.be.server.domain.order.OrderDetail;
-import kr.hhplus.be.server.domain.productRank.ProductRank;
+import kr.hhplus.be.server.domain.order.OrderStats;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -17,5 +17,5 @@ public interface OrderDetailJpaRepository extends JpaRepository<OrderDetail, Lon
             WHERE o.createAt < :end AND o.createAt > :start
             GROUP BY  o.productId
           """)
-    List<ProductRank> findTopSellingProductsBetween(LocalDateTime start, LocalDateTime end);
+    List<OrderStats> findTopSellingProductsBetween(LocalDateTime start, LocalDateTime end);
 }

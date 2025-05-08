@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.infrastructure.product;
 
+import java.util.List;
 import java.util.Optional;
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.ProductOption;
@@ -42,6 +43,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public Optional<Product> findById(long productId) {
         return productJpaRepository.findById(productId);
+    }
+
+    @Override
+    public List<Product> findByIdIn(List<Long> productIds) {
+        return productJpaRepository.findAllById(productIds);
     }
 
 

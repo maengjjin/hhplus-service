@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.infrastructure.user;
 
 import java.util.Optional;
-import kr.hhplus.be.server.Exception.UserException.UserNotFoundException;
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;

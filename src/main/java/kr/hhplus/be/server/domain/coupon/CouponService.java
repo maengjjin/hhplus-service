@@ -29,17 +29,6 @@ public class CouponService {
        return userCoupon;
     }
 
-    public void validateNotAlreadyIssued(long userId, long couponId){
-
-        UserCoupon userCoupon = couponRepository.findUserCouponsWithInfo(userId, couponId);
-
-        if (userCoupon != null) {
-            throw new AlreadyIssuedCouponException();
-        }
-
-    }
-
-
 
     public void useCoupon(UserCoupon userCoupon){
 

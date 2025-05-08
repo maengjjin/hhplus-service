@@ -35,7 +35,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.projectlombok:lombok:1.18.28")
-	implementation ("org.springframework.retry:spring-retry")
+	implementation("org.springframework.retry:spring-retry")
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
     // DB
 	runtimeOnly("com.mysql:mysql-connector-j")

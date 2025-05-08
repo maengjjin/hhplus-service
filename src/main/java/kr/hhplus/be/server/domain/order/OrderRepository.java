@@ -13,5 +13,5 @@ public interface OrderRepository {
 
     void saveAll(List<OrderDetail> details);
 
-    List<ProductRank> findTopSellingProductsBetween(LocalDateTime start, LocalDateTime end);
+    List<OrderStats> findTopSellingProductsBetween(LocalDateTime start, LocalDateTime end);
 }
