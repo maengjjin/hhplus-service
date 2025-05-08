@@ -1,8 +1,5 @@
 package kr.hhplus.be.server.domain.productRank;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -17,28 +14,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ProductRankService {
 
-
-    private final OrderRepository orderRepository;
-
     private final ProductRepository productRepository;
 
     private final ProductRankRepository productRankRepository;
 
 
-    public void aggregateTopSellingProducts(LocalDate date){
 
-        LocalDateTime end = date.atStartOfDay();
-        LocalDateTime start =  end.minusDays(3);
+    public void saveProductSalesRanking(List<ProductRankCommand> command) {
 
-
-        // 인기순위 5개 정렬
-        List<ProductRank> bestProducts = orderRepository.findTopSellingProductsBetween(start, end).stream()
-            .sorted(Comparator.comparing(ProductRank::getOrderQty).reversed()) // 주문 수량 기준 내림차순
-            .limit(5)
-            .toList();
-
-        List<Long> productIds = bestProducts.stream()
-            .map(ProductRank::getProductId)
+        List<Long> productIds = command.stream()
+            .map(ProductRankCommand::getProductId)
             .toList();
 
         // 상품 정보만 list로 가져오기
@@ -47,7 +32,7 @@ public class ProductRankService {
 
         int rank = 1;
 
-        for(ProductRank productRank : bestProducts){
+        for(ProductRankCommand productRank : command){
 
             Product product = productMap.get(productRank.getProductId());
 
