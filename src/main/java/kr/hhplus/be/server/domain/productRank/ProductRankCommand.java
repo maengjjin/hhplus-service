@@ -25,9 +25,9 @@ public class ProductRankCommand {
         this.statDate = statDate;
     }
 
-    public static List<ProductRankCommand> toCommand(List<OrderStats> orderStats) {
+    public static List<ProductRankCommand> toCommand(List<OrderStats> orderStats, LocalDate statDate) {
         return orderStats.stream()
-            .map(order -> new ProductRankCommand(order.getProductId(), order.getOrderQty(), order.getOrderRank(),order.getStatDate()))
+            .map(order -> new ProductRankCommand(order.getProductId(), order.getOrderQty(), order.getOrderRank(),statDate))
             .collect(Collectors.toList());
     }
 
