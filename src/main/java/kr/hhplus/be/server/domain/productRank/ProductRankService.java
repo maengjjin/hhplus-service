@@ -1,10 +1,11 @@
 package kr.hhplus.be.server.domain.productRank;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import kr.hhplus.be.server.domain.order.OrderRepository;
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,15 +31,18 @@ public class ProductRankService {
         Map<Long, Product> productMap = productRepository.findByIdIn(productIds).stream()
             .collect(Collectors.toMap(Product::getProductId, Function.identity()));
 
-        int rank = 1;
 
-        for(ProductRankCommand productRank : command){
+        AtomicInteger rank = new AtomicInteger(1);
 
-            Product product = productMap.get(productRank.getProductId());
+        List<ProductRank> ranks = command.stream()
+            .sorted(Comparator.comparing(ProductRankCommand::getOrderQty).reversed()) // 많이 팔린 순
+            .map(productRank -> {
+                Product product = productMap.get(productRank.getProductId());
+                return new ProductRank(product.getProductId(), product.getName(), rank.getAndIncrement());
+            })
+            .toList();
 
-            productRankRepository.save(new ProductRank(product.getProductId(), product.getName(), rank++));
-
-        }
+        productRankRepository.saveAll(ranks);
 
 
     }

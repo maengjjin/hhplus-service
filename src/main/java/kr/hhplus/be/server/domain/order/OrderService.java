@@ -36,11 +36,8 @@ public class OrderService {
         LocalDateTime end = date.atStartOfDay();
         LocalDateTime start =  end.minusDays(3);
 
-
-        // 인기순위 5개 정렬
         return orderRepository.findTopSellingProductsBetween(start, end).stream()
             .sorted(Comparator.comparing(OrderStats::getOrderQty).reversed()) // 주문 수량 기준 내림차순
-            .limit(5)
             .toList();
 
     }
