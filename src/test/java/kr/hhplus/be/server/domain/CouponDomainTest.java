@@ -5,16 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDateTime;
-import kr.hhplus.be.server.Exception.CouponException.CouponAlreadyUsedException;
-import kr.hhplus.be.server.Exception.CouponException.CouponNotFoundException;
 import kr.hhplus.be.server.Exception.CouponException.CouponOutOfStockException;
 import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.domain.coupon.CouponType;
-import kr.hhplus.be.server.domain.coupon.UserCoupon;
-import kr.hhplus.be.server.domain.coupon.UserCouponInfo;
-import kr.hhplus.be.server.domain.user.User;
-import kr.hhplus.be.server.infrastructure.coupon.CouponJpaRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
