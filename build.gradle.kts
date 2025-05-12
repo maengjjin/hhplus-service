@@ -36,7 +36,10 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.projectlombok:lombok:1.18.28")
 	implementation("org.springframework.retry:spring-retry")
+
+	// redis
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
+	implementation("org.redisson:redisson-spring-boot-starter:3.18.0")
 
     // DB
 	runtimeOnly("com.mysql:mysql-connector-j")
