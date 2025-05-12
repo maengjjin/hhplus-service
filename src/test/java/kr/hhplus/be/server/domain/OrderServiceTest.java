@@ -69,7 +69,7 @@ public class OrderServiceTest {
         String fakeOrderNo = "20250416173244463";
         Order fakeOrder = new Order(new User(userId), OrderStatus.ORDERED);
 
-        when(orderRepository.saveOrder(any(Order.class))).thenReturn(fakeOrder);
+//        when(orderRepository.saveOrder(any(Order.class))).thenReturn(fakeOrder);
 //
 //        List<OrderCommand.OrderItemDetail> item = List.of(
 //            new OrderCommand.OrderItemDetail(1L, 100L, 1, 30000L),

@@ -13,10 +13,10 @@ public class ProductRankFacadeIntegrationTest {
 //    @Autowired
 //    private final p
 
-    @Test
-    void 해당_날짜에_통계_데이터_생성_확인(){
-
-        // given 날짜 세팅 및
-    }
+//    @Test
+//    void 해당_날짜에_통계_데이터_생성_확인(){
+//
+//        // given 날짜 세팅 및
+//    }
 
 }

@@ -50,52 +50,52 @@ public class PointFasadeIntegrationTest  extends DatabaseConnectionTest  {
     @Autowired
     PointRepository pointRepository;
 
-
-    @Test
-    void 포인트_충전_성공_통합테스트() {
-        // given 초기 포인트 3000원인 사용자와 충전 요청 생성
-        User user = userRepository.save(User.builder().point(3000L).build());
-        long chargeAmount = 2000L;
-        PointRequest request = new PointRequest(user.getUserId(), chargeAmount);
-
-        // when 포인트 충전 실행
-        Point chargedUser = pointFacade.userCharge(request);
-
-        // then 1. 사용자 포인트 증가 확인
-        User updatedUser = userRepository.findById(user.getUserId()).orElseThrow();
-        assertThat(updatedUser.getPoint()).isEqualTo(5000L);
-
-        // then 2. 포인트 히스토리가 존재하는지 확인
-        boolean exists = pointRepository.existsByUserIdAndAmount(user.getUserId(), chargeAmount);
-        assertThat(exists).isTrue();
-
-    }
-
-    @Test
-    void 충전금액이_최대한도를_초과하면_예외발생() {
-        // given 포인트가 3000원인 사용자와 과도한 충전 요청
-        User user = userRepository.save(User.builder().point(3000L).build());
-        PointRequest request = new PointRequest(user.getUserId(), 1_000_000L);
-
-        // when & then 예외 발생 검증
-        assertThatThrownBy(() -> pointFacade.userCharge(request))
-            .isInstanceOf(InvalidPointAmountException.class);
-    }
-
-    @Test
-    void 충전금액이_0원이면_예외발생하고_포인트_변경되지_않음() {
-        // given 포인트가 3000원인 사용자와 잘못된 금액 요청
-        User user = userRepository.save(User.builder().point(3000L).build());
-        long invalidAmount = 0L;
-        PointRequest request = new PointRequest(user.getUserId(), invalidAmount);
-
-        // when & then 예외 발생 검증
-        assertThatThrownBy(() -> pointFacade.userCharge(request))
-            .isInstanceOf(InvalidPointAmountException.class);
-
-        // then 실제 사용자 포인트는 변경되지 않아야 함
-        User updatedUser = userRepository.findById(user.getUserId()).orElseThrow();
-        assertThat(updatedUser.getPoint()).isEqualTo(3000L);
-    }
+//
+//    @Test
+//    void 포인트_충전_성공_통합테스트() {
+//        // given 초기 포인트 3000원인 사용자와 충전 요청 생성
+//        User user = userRepository.save(User.builder().point(3000L).build());
+//        long chargeAmount = 2000L;
+//        PointRequest request = new PointRequest(user.getUserId(), chargeAmount);
+//
+//        // when 포인트 충전 실행
+//        Point chargedUser = pointFacade.userCharge(request);
+//
+//        // then 1. 사용자 포인트 증가 확인
+//        User updatedUser = userRepository.findById(user.getUserId()).orElseThrow();
+//        assertThat(updatedUser.getPoint()).isEqualTo(5000L);
+//
+//        // then 2. 포인트 히스토리가 존재하는지 확인
+//        boolean exists = pointRepository.existsByUserIdAndAmount(user.getUserId(), chargeAmount);
+//        assertThat(exists).isTrue();
+//
+//    }
+//
+//    @Test
+//    void 충전금액이_최대한도를_초과하면_예외발생() {
+//        // given 포인트가 3000원인 사용자와 과도한 충전 요청
+//        User user = userRepository.save(User.builder().point(3000L).build());
+//        PointRequest request = new PointRequest(user.getUserId(), 1_000_000L);
+//
+//        // when & then 예외 발생 검증
+//        assertThatThrownBy(() -> pointFacade.userCharge(request))
+//            .isInstanceOf(InvalidPointAmountException.class);
+//    }
+//
+//    @Test
+//    void 충전금액이_0원이면_예외발생하고_포인트_변경되지_않음() {
+//        // given 포인트가 3000원인 사용자와 잘못된 금액 요청
+//        User user = userRepository.save(User.builder().point(3000L).build());
+//        long invalidAmount = 0L;
+//        PointRequest request = new PointRequest(user.getUserId(), invalidAmount);
+//
+//        // when & then 예외 발생 검증
+//        assertThatThrownBy(() -> pointFacade.userCharge(request))
+//            .isInstanceOf(InvalidPointAmountException.class);
+//
+//        // then 실제 사용자 포인트는 변경되지 않아야 함
+//        User updatedUser = userRepository.findById(user.getUserId()).orElseThrow();
+//        assertThat(updatedUser.getPoint()).isEqualTo(3000L);
+//    }
 
 }

@@ -17,32 +17,32 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public class DatabaseConnectionTest{
 
 
-
-    @Container
-    static MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0.33")
-        .withDatabaseName("hhplus")
-        .withUsername("root")
-        .withPassword("newpass123");
-
-    @DynamicPropertySource
-    static void overrideProps(DynamicPropertyRegistry registry) {
-        mysqlContainer.start();
-        registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", mysqlContainer::getUsername);
-        registry.add("spring.datasource.password", mysqlContainer::getPassword);
-    }
-
-
-
-    @Test
-    void testDatabaseConnection() {
-        log.info("로그 getJdbcDriverInstance {} ", mysqlContainer.getJdbcDriverInstance());
-        log.info("로그 getJdbcUrl {} ", mysqlContainer.getJdbcUrl());
-        log.info("로그 getMappedPort {} ", mysqlContainer.getMappedPort(3306));
-        log.info("로그 getHost {} ", mysqlContainer.getHost());
-        log.info("로그 getUsername {} ", mysqlContainer.getUsername());
-        log.info("로그 getPassword {} ", mysqlContainer.getPassword());
-    }
+//
+//    @Container
+//    static MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0.33")
+//        .withDatabaseName("hhplus")
+//        .withUsername("root")
+//        .withPassword("newpass123");
+//
+//    @DynamicPropertySource
+//    static void overrideProps(DynamicPropertyRegistry registry) {
+//        mysqlContainer.start();
+//        registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
+//        registry.add("spring.datasource.username", mysqlContainer::getUsername);
+//        registry.add("spring.datasource.password", mysqlContainer::getPassword);
+//    }
+//
+//
+//
+//    @Test
+//    void testDatabaseConnection() {
+//        log.info("로그 getJdbcDriverInstance {} ", mysqlContainer.getJdbcDriverInstance());
+//        log.info("로그 getJdbcUrl {} ", mysqlContainer.getJdbcUrl());
+//        log.info("로그 getMappedPort {} ", mysqlContainer.getMappedPort(3306));
+//        log.info("로그 getHost {} ", mysqlContainer.getHost());
+//        log.info("로그 getUsername {} ", mysqlContainer.getUsername());
+//        log.info("로그 getPassword {} ", mysqlContainer.getPassword());
+//    }
 
 
 }

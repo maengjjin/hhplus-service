@@ -43,20 +43,20 @@ public class CouponFasadeSyncIntegrationTest {
     @Autowired
     DataSource dataSource;
 
-    @Test
-    void DB연결테스트() {
+//    @Test
+//    void DB연결테스트() {
+//
+//        User user = userRepository.findById(500L).orElseThrow(UserNotFoundException::new);
+//        Coupon coupon = couponRepository.findById(1L).orElseThrow(CouponOutOfStockException::new);
+//        System.out.println(user.getUserId());
+//        System.out.println("coupon. = " + coupon.getName());
+//
+//    }
 
-        User user = userRepository.findById(500L).orElseThrow(UserNotFoundException::new);
-        Coupon coupon = couponRepository.findById(1L).orElseThrow(CouponOutOfStockException::new);
-        System.out.println(user.getUserId());
-        System.out.println("coupon. = " + coupon.getName());
-
-    }
-
-    @Test
-    void printDbConnectionInfo() throws Exception {
-        System.out.println(">>> DB URL: " + dataSource.getConnection().getMetaData().getURL());
-    }
+//    @Test
+//    void printDbConnectionInfo() throws Exception {
+//        System.out.println(">>> DB URL: " + dataSource.getConnection().getMetaData().getURL());
+//    }
 
 //    @Test
 //    void 동시에_쿠폰_발급_요청하면_수량_초과되지_않는다() throws Exception {

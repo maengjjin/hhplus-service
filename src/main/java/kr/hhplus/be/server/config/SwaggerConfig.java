@@ -1,13 +1,11 @@
-package kr.hhplus.be.server.config.swagger;
+package kr.hhplus.be.server.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
-import jdk.javadoc.doclet.Doclet;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 @OpenAPIDefinition(
     info = @Info(
