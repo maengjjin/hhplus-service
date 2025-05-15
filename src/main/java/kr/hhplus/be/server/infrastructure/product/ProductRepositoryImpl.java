@@ -36,6 +36,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
+    public List<Product> saveAll(List<Product> product) {
+        return  productJpaRepository.saveAll(product);
+    }
+
+    @Override
     public ProductOption save(ProductOption option) {
         return productOptionJpaRepository.save(option);
     }

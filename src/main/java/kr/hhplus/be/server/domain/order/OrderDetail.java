@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -42,6 +43,13 @@ public class OrderDetail {
 
     @Column(name = "create_at")
     private LocalDateTime createAt;
+
+    @PrePersist
+    public void prePersist() {
+        if (createAt == null) {
+            this.createAt = LocalDateTime.now();
+        }
+    }
 
 
     public static OrderDetail of(OrderCommand.OrderItem orderItem, long orderId) {

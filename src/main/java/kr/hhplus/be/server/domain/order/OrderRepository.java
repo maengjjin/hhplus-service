@@ -2,7 +2,7 @@ package kr.hhplus.be.server.domain.order;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import kr.hhplus.be.server.domain.productRank.ProductRank;
+import kr.hhplus.be.server.domain.statistics.ProductOrderVolume;
 import org.springframework.stereotype.Component;
 
 
@@ -13,5 +13,6 @@ public interface OrderRepository {
 
     void saveAll(List<OrderDetail> details);
 
-    List<OrderStats> findTopSellingProductsBetween(LocalDateTime start, LocalDateTime end);
+    List<ProductOrderVolume> findAggregateTopOrders(LocalDateTime start, LocalDateTime end);
+
 }
