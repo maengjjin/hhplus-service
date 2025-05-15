@@ -16,7 +16,7 @@ spring:
     generate-ddl: false
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop  # 테스트 시 테이블 자동 생성/삭제
       format_sql: true
     database-platform: org.hibernate.dialect.MySQL8Dialect
     properties:
