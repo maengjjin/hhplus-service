@@ -1,17 +1,19 @@
 package kr.hhplus.be.server.domain.productRank;
 
 import java.time.LocalDate;
-import java.util.List;
-import org.springframework.data.domain.Limit;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Repository;
+import java.util.Map;
+import kr.hhplus.be.server.domain.product.Product;
 
-@Repository
 public interface ProductRankRepository {
 
-    void save(ProductRank option);
+     // 특정 날짜의 상품 랭킹 데이터 저장
+    void saveRanking(ProductRankEntry ranking);
 
-    void saveAll(List<ProductRank> ranks);
+     // 최근 3일간의 데이터를 통합하여 상위 랭킹 저장
+    boolean saveTopRanking(LocalDate date);
 
-    List<ProductRank> findByStatDate(LocalDate statDate, Limit limit, Sort sort);
+    //통합 랭킹에 포함된 상품들의 상세 정보 저장
+    void saveTopRankingDetail(LocalDate date, Map<Long, Product> details);
+
+
 }

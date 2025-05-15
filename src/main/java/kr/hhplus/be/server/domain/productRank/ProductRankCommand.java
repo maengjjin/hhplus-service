@@ -3,32 +3,43 @@ package kr.hhplus.be.server.domain.productRank;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-import kr.hhplus.be.server.domain.order.OrderStats;
+import kr.hhplus.be.server.domain.statistics.ProductOrderVolume;
 import lombok.Getter;
 
 @Getter
 public class ProductRankCommand {
 
-    private final long productId;
 
-    private final long orderQty;
+    private  List<ProductRankCommand.OrderStats> orderStats;
 
-    private final long orderRank;
-
-    private final LocalDate statDate;
+    private  LocalDate statDate;
 
 
-    public ProductRankCommand(long productId, long orderQty, long orderRank, LocalDate statDate) {
-        this.productId = productId;
-        this.orderQty = orderQty;
-        this.orderRank = orderRank;
+    public ProductRankCommand(List<OrderStats> orderStats, LocalDate statDate) {
+        this.orderStats = orderStats;
         this.statDate = statDate;
     }
 
-    public static List<ProductRankCommand> toCommand(List<OrderStats> orderStats, LocalDate statDate) {
-        return orderStats.stream()
-            .map(order -> new ProductRankCommand(order.getProductId(), order.getOrderQty(), order.getOrderRank(),statDate))
+    public static ProductRankCommand toCommand(List<ProductOrderVolume> orderVolume, LocalDate statDate) {
+        List<ProductRankCommand.OrderStats> orderStats = orderVolume.stream()
+            .map(order -> new ProductRankCommand.OrderStats(order.getProductId(), order.getTotalQty()))
             .collect(Collectors.toList());
+
+        return new ProductRankCommand(orderStats, statDate);
+    }
+
+
+    @Getter
+    public static class OrderStats {
+
+        private  long productId;
+
+        private  long totalQty;
+
+        public OrderStats(long productId, long totalQty) {
+            this.productId = productId;
+            this.totalQty = totalQty;
+        }
     }
 
 }

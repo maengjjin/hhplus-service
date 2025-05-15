@@ -6,7 +6,7 @@ import java.util.List;
 import kr.hhplus.be.server.domain.order.Order;
 import kr.hhplus.be.server.domain.order.OrderDetail;
 import kr.hhplus.be.server.domain.order.OrderRepository;
-import kr.hhplus.be.server.domain.order.OrderStats;
+import kr.hhplus.be.server.domain.statistics.ProductOrderVolume;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -31,8 +31,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public List<OrderStats> findTopSellingProductsBetween(LocalDateTime start, LocalDateTime end) {
-        return orderDetailJpaRepository.findTopSellingProductsBetween(start, end);
-
+    public List<ProductOrderVolume> findAggregateTopOrders(LocalDateTime start, LocalDateTime end) {
+        return orderDetailJpaRepository.findAggregateTopOrders(start, end);
     }
 }
