@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.application.order;
 
 
+import java.time.LocalDate;
 import java.util.List;
 import kr.hhplus.be.server.application.order.OrderResponse.OrderItems;
 import kr.hhplus.be.server.domain.coupon.CouponService;
@@ -16,6 +17,8 @@ import kr.hhplus.be.server.domain.point.PointService;
 import kr.hhplus.be.server.domain.product.ProductCommand;
 import kr.hhplus.be.server.domain.product.ProductDTO.ProductOrderResult;
 import kr.hhplus.be.server.domain.product.ProductService;
+import kr.hhplus.be.server.domain.productRank.ProductRankCommand;
+import kr.hhplus.be.server.domain.productRank.ProductRankService;
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +41,8 @@ public class OrderFacade {
 
     private final PaymentService paymentService;
 
+    private final ProductRankService productRankService;
+
     @Transactional
     public OrderResponse createOrder(OrderCriteria orderCriteria) {
 
@@ -55,6 +60,11 @@ public class OrderFacade {
 
         // 결제 로직
         Payment payment = createPayment(order.getOrderId(), user, userCoupon, orderItems);
+
+        LocalDate date = payment.getCreateAt().toLocalDate();
+
+        // 주문 시 상품 판매량수 증가
+        productRankService.incrementDailyProductSales(ProductRankCommand.toCommand(orderItems, date));
 
         return new OrderResponse(order.getOrderNo(), OrderItems.of(orderItems), payment);
 

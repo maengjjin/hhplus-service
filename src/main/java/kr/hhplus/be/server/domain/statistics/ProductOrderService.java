@@ -47,7 +47,7 @@ public class ProductOrderService {
                 return new ProductOrderStats(
                     product.getProductId(),
                     product.getName(),
-                    orderStats.getTotalQty(),
+                    orderStats.getOrderQty(),
                     date
                 );
             })

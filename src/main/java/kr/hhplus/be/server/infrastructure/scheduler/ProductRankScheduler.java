@@ -19,7 +19,7 @@ public class ProductRankScheduler {
     public void generateDailyOrderStatistics() {
 
         try {
-            // 1. 전날의 통계 생성
+            // 1. 전날의 주문 집계 가져오기
             LocalDate today = LocalDate.now();
 
             // 어제날짜 생성

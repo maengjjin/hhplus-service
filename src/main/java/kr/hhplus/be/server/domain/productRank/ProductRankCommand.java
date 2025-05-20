@@ -3,7 +3,7 @@ package kr.hhplus.be.server.domain.productRank;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-import kr.hhplus.be.server.domain.statistics.ProductOrderVolume;
+import kr.hhplus.be.server.domain.product.ProductDTO.ProductOrderResult;
 import lombok.Getter;
 
 @Getter
@@ -20,9 +20,10 @@ public class ProductRankCommand {
         this.statDate = statDate;
     }
 
-    public static ProductRankCommand toCommand(List<ProductOrderVolume> orderVolume, LocalDate statDate) {
+
+    public static ProductRankCommand toCommand(List<ProductOrderResult> orderVolume, LocalDate statDate) {
         List<ProductRankCommand.OrderStats> orderStats = orderVolume.stream()
-            .map(order -> new ProductRankCommand.OrderStats(order.getProductId(), order.getTotalQty()))
+            .map(order -> new ProductRankCommand.OrderStats(order.getProductId(), order.getOrderQty()))
             .collect(Collectors.toList());
 
         return new ProductRankCommand(orderStats, statDate);
@@ -34,11 +35,11 @@ public class ProductRankCommand {
 
         private  long productId;
 
-        private  long totalQty;
+        private  long orderQty;
 
-        public OrderStats(long productId, long totalQty) {
+        public OrderStats(long productId, long orderQty) {
             this.productId = productId;
-            this.totalQty = totalQty;
+            this.orderQty = orderQty;
         }
     }
 

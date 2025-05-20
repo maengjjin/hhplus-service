@@ -19,8 +19,8 @@ public class ProductRankEntry {
 
     public static ProductRankEntry fromCommand(ProductRankCommand command) {
         List<ProductSales> rankItems = command.getOrderStats().stream()
-            .map(order -> new ProductSales(order.getProductId(), order.getTotalQty()))
-            .collect(Collectors.toList());
+            .map(order -> new ProductSales(order.getProductId(), order.getOrderQty())).
+            collect(Collectors.toList());
 
         return new ProductRankEntry(rankItems, command.getStatDate());
     }
@@ -29,11 +29,11 @@ public class ProductRankEntry {
     @Getter
     public static class ProductSales {
         private long productId;
-        private long totalQty;
+        private long orderQty;
 
-        public ProductSales(long productId, long totalQty) {
+        public ProductSales(long productId, long orderQty) {
             this.productId = productId;
-            this.totalQty = totalQty;
+            this.orderQty = orderQty;
         }
     }
 

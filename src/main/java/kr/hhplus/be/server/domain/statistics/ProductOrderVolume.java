@@ -7,10 +7,10 @@ public class ProductOrderVolume {
 
     private long productId;
 
-    private long totalQty;
+    private long orderQty;
 
-    public ProductOrderVolume(long productId, long totalQty) {
+    public ProductOrderVolume(long productId, long orderQty) {
         this.productId = productId;
-        this.totalQty = totalQty;
+        this.orderQty = orderQty;
     }
 }
