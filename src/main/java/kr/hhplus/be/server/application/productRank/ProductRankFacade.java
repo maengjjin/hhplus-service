@@ -2,10 +2,9 @@ package kr.hhplus.be.server.application.productRank;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 import kr.hhplus.be.server.domain.productRank.ProductRankEntry;
+import kr.hhplus.be.server.domain.statistics.ProductOrderCommand;
 import kr.hhplus.be.server.domain.statistics.ProductOrderService;
-import kr.hhplus.be.server.domain.statistics.ProductOrderVolume;
 import kr.hhplus.be.server.domain.productRank.ProductRankService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,12 +33,10 @@ public class ProductRankFacade {
             return; // 주문 없으면 종료
         }
 
-        List<ProductOrderVolume> productOrderVolumes = orderVolumes.stream()
-            .map(volumes -> new ProductOrderVolume(volumes.getProductId(), volumes.getOrderQty()))
-            .toList();
+        ProductOrderCommand command = ProductOrderCommand.toCommand(orderVolumes, targetDate);
 
         // 통계 저장
-        productOrderService.createAggregateTopOrders(productOrderVolumes, targetDate);
+        productOrderService.createAggregateTopOrders(command, targetDate);
 
         // Redis에 전체 랭킹 캐싱
         productRankService.cacheTopProductRankingByDate(targetDate);

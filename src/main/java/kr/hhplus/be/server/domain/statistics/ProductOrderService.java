@@ -34,7 +34,11 @@ public class ProductOrderService {
     }
 
 
-    public void createAggregateTopOrders(List<ProductOrderVolume> productOrder, LocalDate date) {
+    public void createAggregateTopOrders(ProductOrderCommand command, LocalDate date) {
+
+        List<ProductOrderVolume> productOrder = command.getOrderStats().stream()
+            .map(volumes -> new ProductOrderVolume(volumes.getProductId(), volumes.getOrderQty()))
+            .toList();
 
         List<Long> productIds = extractProductIds(productOrder);
 
