@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import kr.hhplus.be.server.domain.order.OrderPaymentCalculator.PriceSummary;
@@ -47,7 +48,12 @@ public class Payment {
     @Column(name = "create_at")
     private LocalDateTime createAt;
 
-
+    @PrePersist
+    public void prePersist() {
+        if (createAt == null) {
+            this.createAt = LocalDateTime.now();
+        }
+    }
 
     public static Payment create(long orderId, long userId, long couponId, PriceSummary priceSummary) {
         Payment payment = new Payment();

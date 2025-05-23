@@ -57,4 +57,14 @@ public class User {
         return new User(userId, point);
     }
 
+    public static User withPoint(long point) {
+        User user = new User();
+        user.point = point;
+        user.createdAt = LocalDateTime.now();
+        user.updateAt = LocalDateTime.now();
+        return user;
+    }
+
+
+
 }
