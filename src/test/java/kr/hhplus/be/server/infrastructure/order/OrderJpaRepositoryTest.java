@@ -49,8 +49,8 @@ public class OrderJpaRepositoryTest {
         List<ProductOrderVolume> result = orderDetailJpaRepository.findAggregateTopOrders(start, end);
 
         Assertions.assertThat(result).hasSize(2);
-        assertThat(result.get(0).getTotalQty()).isEqualTo(20);
-        assertThat(result.get(1).getTotalQty()).isEqualTo(15); // 예시 수량
+        assertThat(result.get(0).getOrderQty()).isEqualTo(20);
+        assertThat(result.get(1).getOrderQty()).isEqualTo(15); // 예시 수량
 
 
 
