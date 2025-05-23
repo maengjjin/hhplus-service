@@ -12,7 +12,7 @@ public class ExternalPlatformService {
 
     public void sendOrderInfoToExternalPlatform(OrderEvent orderEvent) {
 
-        externalPlatformClient.sendOrderInfo(orderEvent.getOrderId(), orderEvent.getUserId());
+        externalPlatformClient.sendOrderInfo(orderEvent);
 
 
     }
