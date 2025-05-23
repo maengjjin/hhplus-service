@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.infrastructure.productRank;
 
-import static kr.hhplus.be.server.config.RedisKeyFactory.getTopProductDetailKey;
-import static kr.hhplus.be.server.config.RedisKeyFactory.getTopProductRankKey;
+import static kr.hhplus.be.server.common.RedisKeyFactory.getTopProductDetailKey;
+import static kr.hhplus.be.server.common.RedisKeyFactory.getTopProductRankKey;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

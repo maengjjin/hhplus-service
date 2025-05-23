@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.domain.productRank;
 
 
-import static kr.hhplus.be.server.config.RedisKeyFactory.getProductRankKey;
-import static kr.hhplus.be.server.config.RedisKeyFactory.getTopProductRankKey;
+import static kr.hhplus.be.server.common.RedisKeyFactory.getProductRankKey;
+import static kr.hhplus.be.server.common.RedisKeyFactory.getTopProductRankKey;
 
 import java.time.LocalDate;
 import java.util.Collections;

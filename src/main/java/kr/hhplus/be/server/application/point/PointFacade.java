@@ -5,7 +5,7 @@ import kr.hhplus.be.server.domain.point.PointService;
 
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserService;
-import kr.hhplus.be.server.web.point.request.PointRequest;
+import kr.hhplus.be.server.interfaces.point.request.PointRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

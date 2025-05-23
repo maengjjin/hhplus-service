@@ -26,7 +26,7 @@ public class ProductOrderStats {
 
     private String productName;
 
-    private long totalQty;
+    private long orderQty;
 
     private LocalDate statDate;
 
@@ -37,11 +37,10 @@ public class ProductOrderStats {
         }
     }
 
-    public ProductOrderStats(long productId, String productName, long totalQty,
-        LocalDate statDate) {
+    public ProductOrderStats(long productId, String productName, long orderQty, LocalDate statDate) {
         this.productId = productId;
         this.productName = productName;
-        this.totalQty = totalQty;
+        this.orderQty = orderQty;
         this.statDate = statDate;
     }
 }
