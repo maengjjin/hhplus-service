@@ -55,7 +55,7 @@ public class ExternalPlatformEventListenerTest {
         externalPlatformEventListener.handleOrderCreatedEvent(orderEvent);
 
         // then: 외부 플랫폼 클라이언트 호출 확인
-        Mockito.verify(externalPlatformClient).sendOrderInfo(orderEvent.getOrderId(), orderEvent.getUserId());
+        Mockito.verify(externalPlatformClient).sendOrderInfo(orderEvent);
 
 
     }

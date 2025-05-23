@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -22,6 +23,8 @@ import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.ProductOption;
 import kr.hhplus.be.server.domain.product.ProductRepository;
 import kr.hhplus.be.server.domain.product.ProductStatus;
+import kr.hhplus.be.server.domain.productRank.ProductRankEvent;
+import kr.hhplus.be.server.domain.productRank.ProductRankService;
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,14 +52,14 @@ public class OrderEventAsyncIntegrationTest {
     @Autowired
     ProductRepository productRepository;
 
+    @MockitoSpyBean
+    ProductRankService productRankService;
+
+    @MockitoSpyBean
+    private ExternalPlatformService externalPlatformService;
     
     @Autowired
     private ApplicationEvents applicationEvents;
-
-
-    @MockitoSpyBean // 실제 서비스를 스파이로 래핑
-    private ExternalPlatformService externalPlatformService;
-
 
 
     @BeforeEach
@@ -68,22 +71,6 @@ public class OrderEventAsyncIntegrationTest {
         long userId = savedUser.getUserId();
 
 
-
-        Coupon coupon = couponRepository.save(new Coupon(
-            "5천원 할인 쿠폰",
-            CouponType.FIXED,
-            0,
-            5000,
-            10000,
-            5000,
-            1000,
-            1,
-            LocalDateTime.of(2025, 5, 30, 23, 59) // expiresAt
-        ));
-
-        UserCoupon userCoupon = couponRepository.save(UserCoupon.create(userId, coupon)); // userId 1L에게 쿠폰 할당
-
-        // 상품 데이터 저장
 
         Coupon coupon1 = couponRepository.save(new Coupon(
             "5천원 할인 쿠폰",
@@ -97,8 +84,51 @@ public class OrderEventAsyncIntegrationTest {
             LocalDateTime.of(2025, 5, 30, 23, 59) // expiresAt
         ));
 
-        couponRepository.save(UserCoupon.create(userId, coupon1)); // userId 1L에게 쿠폰 할당
+        UserCoupon userCoupon = couponRepository.save(UserCoupon.create(userId, coupon1)); // userId 1L에게 쿠폰 할당
 
+        // 상품 데이터 저장
+
+        Coupon coupon2 = couponRepository.save(new Coupon(
+            "5천원 할인 쿠폰",
+            CouponType.FIXED,
+            0,
+            5000,
+            10000,
+            5000,
+            1000,
+            1,
+            LocalDateTime.of(2025, 5, 30, 23, 59) // expiresAt
+        ));
+
+        couponRepository.save(UserCoupon.create(userId, coupon2)); // userId 1L에게 쿠폰 할당
+
+        Coupon coupon3 = couponRepository.save(new Coupon(
+            "5천원 할인 쿠폰",
+            CouponType.FIXED,
+            0,
+            5000,
+            10000,
+            5000,
+            1000,
+            1,
+            LocalDateTime.of(2025, 5, 30, 23, 59) // expiresAt
+        ));
+
+        couponRepository.save(UserCoupon.create(userId, coupon3)); // userId 1L에게 쿠폰 할당
+
+        Coupon coupon4 = couponRepository.save(new Coupon(
+            "5천원 할인 쿠폰",
+            CouponType.FIXED,
+            0,
+            5000,
+            10000,
+            5000,
+            1000,
+            1,
+            LocalDateTime.of(2025, 5, 30, 23, 59) // expiresAt
+        ));
+
+        couponRepository.save(UserCoupon.create(userId, coupon4)); // userId 1L에게 쿠폰 할당
 
 
         // 상품 데이터 저장
@@ -171,6 +201,58 @@ public class OrderEventAsyncIntegrationTest {
 
         await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
             verify(externalPlatformService).sendOrderInfoToExternalPlatform(any(OrderEvent.class));
+        });
+    }
+
+
+    @Test
+    void 주문_완료시_상품_통계_이벤트가_발행되는지_검증() {
+
+        // given: 주문 생성에 필요한 데이터 세팅
+        long userId = 1L;
+        long couponId = 3L;
+        List<OrderItem> items = List.of(
+            new OrderItem(1L, 1L, 2L),
+            new OrderItem(1L, 2L, 2L),
+            new OrderItem(1L, 3L, 2L)
+        );
+        OrderCriteria orderCriteria = new OrderCriteria(userId, couponId, items);
+
+        // when: 주문 생성 및 이벤트 발행 실행
+        orderFacade.createOrder(orderCriteria);
+
+        // then: 이벤트 발행 여부 및 데이터 검증
+        assertThat(applicationEvents.stream(ProductRankEvent.class))
+            .hasSize(1)
+            .anySatisfy(event -> {
+                assertAll(
+                    () -> assertThat(event.getDate()).isEqualTo(LocalDate.now()),
+                    () -> assertThat(event.getItems()).hasSize(items.size())
+                );
+            });
+    }
+
+    @Test
+    void 주문_생성_트랜잭션_커밋_후_상품_통계_이벤트가_비동기적으로_처리되는지_검증() {
+
+        // given: 주문 생성에 필요한 데이터 세팅
+        long userId = 1L;
+        long couponId = 4L;
+        List<OrderItem> items = List.of(
+            new OrderItem(1L, 1L, 2L),
+            new OrderItem(1L, 2L, 2L),
+            new OrderItem(1L, 3L, 2L)
+        );
+        OrderCriteria orderCriteria = new OrderCriteria(userId, couponId, items);
+
+        // when: 주문 생성 실행
+        orderFacade.createOrder(orderCriteria);
+
+        // then: 이벤트 발행 및 비동기 리스너 실행 검증
+        assertThat(applicationEvents.stream(ProductRankEvent.class)).hasSize(1);
+
+        await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
+            verify(productRankService).incrementDailyProductSales(any(ProductRankEvent.class));
         });
     }
 
