@@ -3,6 +3,7 @@ package kr.hhplus.be.server.application.order;
 
 import java.time.LocalDate;
 import java.util.List;
+import kr.hhplus.be.server.application.event.OrderEventPublisher;
 import kr.hhplus.be.server.application.order.OrderResponse.OrderItems;
 import kr.hhplus.be.server.domain.coupon.CouponService;
 import kr.hhplus.be.server.domain.coupon.UserCoupon;
@@ -41,6 +42,8 @@ public class OrderFacade {
 
     private final PaymentService paymentService;
 
+    private final OrderEventPublisher eventPublisher;
+
     private final ProductRankService productRankService;
 
     @Transactional
@@ -66,13 +69,15 @@ public class OrderFacade {
         // 주문 시 상품 판매량수 증가
         productRankService.incrementDailyProductSales(ProductRankCommand.toCommand(orderItems, date));
 
+        // 외부플랫폼 전송 이벤트 발생
+        eventPublisher.sendOrderToExternalPlatform(order.getOrderId(), user.getUserId());
+
         return new OrderResponse(order.getOrderNo(), OrderItems.of(orderItems), payment);
 
     }
 
 
-    @Transactional
-    public Payment createPayment(long orderId, User user, UserCoupon userCoupon, List<ProductOrderResult> productOrderResultList) {
+    private Payment createPayment(long orderId, User user, UserCoupon userCoupon, List<ProductOrderResult> productOrderResultList) {
 
 
         OrderPaymentCalculator calculator = new OrderPaymentCalculator();
