@@ -66,8 +66,8 @@ public class OrderFacade {
 
         LocalDate date = payment.getCreateAt().toLocalDate();
 
-        // 주문 시 상품 판매량수 증가
-        productRankService.incrementDailyProductSales(ProductRankCommand.toCommand(orderItems, date));
+        // 상품 판매량수 증가 이벤트 발생
+        eventPublisher.publishProductSalesStatistics(ProductRankCommand.toCommand(orderItems, date));
 
         // 외부플랫폼 전송 이벤트 발생
         eventPublisher.sendOrderToExternalPlatform(order.getOrderId(), user.getUserId());

@@ -17,12 +17,12 @@ public class ProductRankEntry {
     }
 
 
-    public static ProductRankEntry fromCommand(ProductRankCommand command) {
-        List<ProductSales> rankItems = command.getOrderStats().stream()
+    public static ProductRankEntry from(ProductRankEvent event) {
+        List<ProductSales> rankItems = event.getItems().stream()
             .map(order -> new ProductSales(order.getProductId(), order.getOrderQty())).
             collect(Collectors.toList());
 
-        return new ProductRankEntry(rankItems, command.getStatDate());
+        return new ProductRankEntry(rankItems, event.getDate());
     }
 
 

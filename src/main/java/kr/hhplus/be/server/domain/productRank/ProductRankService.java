@@ -5,13 +5,8 @@ import static kr.hhplus.be.server.common.RedisKeyFactory.getProductRankKey;
 import static kr.hhplus.be.server.common.RedisKeyFactory.getTopProductRankKey;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.ProductRepository;
 import kr.hhplus.be.server.domain.productRank.RankingMergeStrategy.MergeType;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +23,12 @@ public class ProductRankService {
     private final ProductRankRepository  productRankRepository;
 
     // 주문 시 상품 판매량수 증가
-    public void incrementDailyProductSales(ProductRankCommand command) {
+    public void incrementDailyProductSales(ProductRankEvent event) {
 
         // 날짜 키 생성
-        String redisKey = getProductRankKey(command.getStatDate());
+        String redisKey = getProductRankKey(event.getDate());
 
-        ProductRankEntry productEntry = ProductRankEntry.fromCommand(command);
+        ProductRankEntry productEntry = ProductRankEntry.from(event);
 
         productRankRepository.incrementDailyProductSales(redisKey, productEntry);
 
@@ -86,22 +81,22 @@ public class ProductRankService {
 
 
 
-    public List<Long> extractProductIds(ProductRankCommand command) {
-        return  command.getOrderStats().stream()
-            .map(ProductRankCommand.OrderStats::getProductId)
-            .toList();
-    }
-
-
-    public Map<Long, Product> fetchProductMapById(List<Long> productIds) {
-        if (productIds.isEmpty()) {
-            return Collections.emptyMap();
-        }
-
-        return productRepository.findByIdIn(productIds)
-            .stream()
-            .collect(Collectors.toMap(Product::getProductId, Function.identity()));
-    }
+//    public List<Long> extractProductIds(ProductRankCommand command) {
+//        return  command.getOrderStats().stream()
+//            .map(ProductRankCommand.OrderStats::getProductId)
+//            .toList();
+//    }
+//
+//
+//    public Map<Long, Product> fetchProductMapById(List<Long> productIds) {
+//        if (productIds.isEmpty()) {
+//            return Collections.emptyMap();
+//        }
+//
+//        return productRepository.findByIdIn(productIds)
+//            .stream()
+//            .collect(Collectors.toMap(Product::getProductId, Function.identity()));
+//    }
 
 
 
