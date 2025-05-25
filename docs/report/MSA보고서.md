@@ -141,6 +141,8 @@ sequenceDiagram
     participant ProductRankService
     participant ExternalPlatformService
     participant MessageBroker
+    participant Redis
+    participant RetryScheduler
 
     Client->>OrderService: 주문 요청(OrderCriteria)
 
@@ -187,11 +189,36 @@ sequenceDiagram
                     MessageBroker->>OrderService: 결제완료이벤트 수신
                     OrderService->>OrderService: 주문 상태 완료로 변경
                     
-                    MessageBroker->>ProductRankService: 결제완료이벤트 수신
-                    ProductRankService->>ProductRankService: 상품 판매 통계 처리
+                    Note over OrderService, ProductRankService: 3. 상품 통계 처리 (비동기)
+                    par 상품 판매 통계 처리
+                        OrderService->>MessageBroker: 상품통계이벤트 발행(비동기)
+                        MessageBroker->>ProductRankService: 상품통계이벤트 수신
+                        
+                        alt 통계 처리 성공
+                            ProductRankService->>Redis: Redis ZSort로 상품별 판매량 증가
+                            ProductRankService->>Redis: 상품 랭킹 업데이트
+                        else 통계 처리 실패
+                            ProductRankService->>ProductRankService: 실패 로그 기록
+                            ProductRankService->>Redis: 재시도 큐에 이벤트 저장
+                            
+                            RetryScheduler->>Redis: 실패한 통계 이벤트 조회
+                            RetryScheduler->>ProductRankService: 실패 이벤트 재처리
+                        end
+                    and 외부 플랫폼 전송
+                        OrderService->>MessageBroker: 외부플랫폼전송이벤트 발행(비동기)
+                        MessageBroker->>ExternalPlatformService: 외부플랫폼전송이벤트 수신
+                        
+                        alt 외부 전송 성공
+                            ExternalPlatformService->>ExternalPlatformService: 외부 API 호출
+                        else 외부 전송 실패
+                            ExternalPlatformService->>ExternalPlatformService: 실패 로그 기록
+                            ExternalPlatformService->>Redis: 재시도 큐에 이벤트 저장
+                            
+                            RetryScheduler->>Redis: 실패한 외부 전송 이벤트 조회
+                            RetryScheduler->>ExternalPlatformService: 실패 이벤트 재처리
+                        end
+                    end
                     
-                    MessageBroker->>ExternalPlatformService: 결제완료이벤트 수신
-                    ExternalPlatformService->>ExternalPlatformService: 외부 플랫폼 알림
                 else 결제 실패
                     PaymentService->>MessageBroker: 결제실패이벤트 발행(비동기)
                     
@@ -244,6 +271,10 @@ sequenceDiagram
     Client->>OrderService: 주문 상태 조회 요청
     OrderService-->>Client: 주문 상태 응답
 
+    Note over RetryScheduler: 4. 데이터 일관성 보장을 위한 정기 처리
+    RetryScheduler->>Redis: 실패 처리 큐 확인
+    RetryScheduler->>ProductRankService: 실패한 통계 데이터 재처리
+    RetryScheduler->>ExternalPlatformService: 실패한 외부 전송 재처리
 
 ```
 
