@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("springEventPublisher")
 @RequiredArgsConstructor
 public class OrderSpringEventPublisher implements OrderEventPublisher {
 
