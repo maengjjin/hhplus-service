@@ -19,10 +19,10 @@ import kr.hhplus.be.server.domain.product.ProductCommand;
 import kr.hhplus.be.server.domain.product.ProductDTO.ProductOrderResult;
 import kr.hhplus.be.server.domain.product.ProductService;
 import kr.hhplus.be.server.domain.productRank.ProductRankCommand;
-import kr.hhplus.be.server.domain.productRank.ProductRankService;
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,9 +42,8 @@ public class OrderFacade {
 
     private final PaymentService paymentService;
 
+    @Qualifier("kafkaOrderProducer")
     private final OrderEventPublisher eventPublisher;
-
-    private final ProductRankService productRankService;
 
     @Transactional
     public OrderResponse createOrder(OrderCriteria orderCriteria) {

@@ -39,9 +39,14 @@ dependencies {
 
 	// redis
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
-	implementation("org.redisson:redisson-spring-boot-starter:3.18.0")
 
-    // DB
+
+	// kafka
+	implementation ("org.springframework.kafka:spring-kafka")
+	
+
+
+	// DB
 	runtimeOnly("com.mysql:mysql-connector-j")
 
 	// lombok
@@ -55,6 +60,8 @@ dependencies {
 	testImplementation("mysql:mysql-connector-java:8.0.33")
 	testImplementation("io.zonky.test:embedded-database-spring-test:2.6.0")
 	testImplementation("com.playtika.testcontainers:embedded-mysql:2.2.6")
+	testImplementation("org.testcontainers:kafka:1.19.8")
+	testImplementation("org.springframework.kafka:spring-kafka-test")
 
 	//swagger
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
