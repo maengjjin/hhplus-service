@@ -2,8 +2,6 @@ package kr.hhplus.be.server.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import kr.hhplus.be.server.RedisTestContainersConfig;
+import kr.hhplus.be.server.TestcontainersConfiguration;
 import kr.hhplus.be.server.common.RedisTemplateConfig;
 import kr.hhplus.be.server.common.RedisKeyFactory;
 import kr.hhplus.be.server.domain.product.Product;
@@ -35,7 +33,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Transactional
 @Testcontainers
 @SpringBootTest
-public class ProductRankServiceRedisTest extends RedisTestContainersConfig {
+public class ProductRankServiceRedisTest extends TestcontainersConfiguration {
 
     @Autowired
     private RedisTemplateConfig redisTemplate;

@@ -2,7 +2,9 @@ package kr.hhplus.be.server.domain.order;
 
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Getter
 public class OrderEvent {
 
